@@ -2,6 +2,6 @@ package examples.Chess;
 
 public enum Color {
     BLACK,
-    RED,
+    WHITE,
     NULL
 }

@@ -8,13 +8,7 @@ import java.util.ArrayList;
 
 public class Piece extends BasePiece {
     public enum PieceType {
-        JU,
-        MA,
-        XIANG,
-        SHI,
-        SHUAI,
-        PAO,
-        BING
+        Q,R,B,N,K,P
     }
 
     private PieceType type;
@@ -37,7 +31,7 @@ public class Piece extends BasePiece {
     public ArrayList<Point2D> getAvailablePositions() {
         ArrayList<Point2D> result = new ArrayList<>();
         switch (type) {
-            case JU:
+            case R:
                 for (int i = y + 1; i < 10; i++) {
                     if (checkBoardPosition(x, i) == color) break;
                     result.add(new Point2D(x, i));
@@ -59,7 +53,7 @@ public class Piece extends BasePiece {
                     if (checkBoardPosition(i, y) != Color.NULL) break;
                 }
                 break;
-            case MA:
+            case N:
                 result.add(new Point2D(x + 1, y + 2));
                 result.add(new Point2D(x + 1, y - 2));
                 result.add(new Point2D(x - 1, y + 2));
@@ -69,14 +63,14 @@ public class Piece extends BasePiece {
                 result.add(new Point2D(x - 2, y + 1));
                 result.add(new Point2D(x - 2, y - 1));
                 break;
-            case BING:
+            case P:
                 if (color == Color.BLACK) {
                     result.add(new Point2D(x, y - 1));
                     if (y < 5) {
                         result.add(new Point2D(x - 1, y));
                         result.add(new Point2D(x + 1, y));
                     }
-                } else if (color == Color.RED) {
+                } else if (color == Color.WHITE) {
                     result.add(new Point2D(x, y + 1));
                     if (y > 4) {
                         result.add(new Point2D(x - 1, y));
@@ -84,13 +78,39 @@ public class Piece extends BasePiece {
                     }
                 }
                 break;
-            case XIANG:
+            case B:
                 result.add(new Point2D(x + 2, y + 2));
                 result.add(new Point2D(x + 2, y - 2));
                 result.add(new Point2D(x - 2, y + 2));
                 result.add(new Point2D(x - 2, y - 2));
                 result.removeIf(p -> {
-                    if (color == Color.RED) {
+                    if (color == Color.WHITE) {
+                        return p.y > 4;
+                    } else {
+                        return p.y < 5;
+                    }
+                });
+                break;
+            case K:
+                result.add(new Point2D(x + 2, y + 2));
+                result.add(new Point2D(x + 2, y - 2));
+                result.add(new Point2D(x - 2, y + 2));
+                result.add(new Point2D(x - 2, y - 2));
+                result.removeIf(p -> {
+                    if (color == Color.WHITE) {
+                        return p.y > 4;
+                    } else {
+                        return p.y < 5;
+                    }
+                });
+                break;
+            case Q:
+                result.add(new Point2D(x + 2, y + 2));
+                result.add(new Point2D(x + 2, y - 2));
+                result.add(new Point2D(x - 2, y + 2));
+                result.add(new Point2D(x - 2, y - 2));
+                result.removeIf(p -> {
+                    if (color == Color.WHITE) {
                         return p.y > 4;
                     } else {
                         return p.y < 5;

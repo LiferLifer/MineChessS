@@ -37,8 +37,8 @@ public class Chess {
     public static void main(String[] args) {
         View.window.setSize(960, 600);
         Game.setMaximumPlayer(2);
-        View.setName("Let's play chesS");
-        Game.setBoardSize(9, 10);
+        View.setName("Let's play the chesS");
+        Game.setBoardSize(8, 8);
         Game.saver.checkSize(true); // 读档时检查存档棋盘大小
         Game.saver.setSlotNumber(5); // 存档数量
 
@@ -131,13 +131,13 @@ public class Chess {
                 @Override
                 public ActionPerformType perform() {
                     if (!isSelecting) return ActionPerformType.FAIL; // 没选中或不是兵返回FAIL
-                    if (selectedPiece.getType() != Piece.PieceType.BING) {
+                    if (selectedPiece.getType() != Piece.PieceType.P) {
                         selectedPiece = null; // 清理全局变量
                         availablePositions.clear();
                         return ActionPerformType.FAIL;
                     }
                     changedPiece = selectedPiece; // 记录改变的棋子，方便撤回
-                    selectedPiece.setType(Piece.PieceType.MA); // 改变type
+                    selectedPiece.setType(Piece.PieceType.N); // 改变type
                     selectedPiece = null; // 清理全局变量
                     availablePositions.clear();
                     return ActionPerformType.SUCCESS;
@@ -145,7 +145,7 @@ public class Chess {
 
                 @Override
                 public void undo() {
-                    changedPiece.setType(Piece.PieceType.BING); // 把记下来的棋子改回兵
+                    changedPiece.setType(Piece.PieceType.P); // 把记下来的棋子改回兵
                 }
             });
         });
@@ -155,7 +155,7 @@ public class Chess {
 
         // 胜利条件：刚才被吃的是将/帅，则吃子的玩家赢
         Game.setPlayerWinningJudge((player -> {
-            return lastRemovedPieceType == Piece.PieceType.SHUAI
+            return lastRemovedPieceType == Piece.PieceType.K
                     && Game.getCurrentPlayerIndex() == player.getId();
         }));
 
@@ -244,8 +244,8 @@ public class Chess {
                 if (grid.hasPiece()) { // 绘制棋子，这里直接写文字了。加图片建议用JLabel的Icon。
                     Piece piece = (Piece) grid.getOwnedPiece();
                     this.label.setText(piece.getType().name());
-                    if (piece.getColor() == Color.RED)
-                        this.label.setForeground(java.awt.Color.RED);
+                    if (piece.getColor() == Color.WHITE)
+                        this.label.setForeground(java.awt.Color.WHITE);
                     else
                         this.label.setForeground(java.awt.Color.BLACK);
                 } else {
