@@ -182,8 +182,8 @@ public class Chess {
         });
         try {
             // 设置背景图片。BoardView有个构造函数支持直接设置。其他所有JPanel都是魔改过的，可以直接加图片。
-            Image image = ImageIO.read(new File("src/main/resources/bg.jpeg"));
-            Image image2 = ImageIO.read(new File("src/main/resources/bg2.bmp"));
+            Image image = ImageIO.read(new File("src/main/resources/img.png"));
+            Image image2 = ImageIO.read(new File("src/main/resources/bg2.png"));
             View.setBoardViewPattern(() -> new BoardView(image) {});
             MenuStage.instance().setBackgroundImage(image2);
         } catch (IOException e) {
@@ -200,7 +200,7 @@ public class Chess {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         super.mouseEntered(e);
-                        setBackground(new java.awt.Color(255, 255, 150)); //高亮背景色
+                        setBackground(new java.awt.Color(2, 158, 143)); //高亮背景色
                         setOpaque(true); // 背景设置为不透明
                         revalidate(); // 这两行建议在改ui之后都加。。
                         repaint();
@@ -213,7 +213,7 @@ public class Chess {
                         if (!isHighLighted) { // 判断是否高亮，如果没高亮就背景透明
                             setOpaque(false);
                         } else { // 高亮的话设回高亮的颜色（黄色）
-                            setBackground(java.awt.Color.YELLOW);
+                            setBackground(new java.awt.Color(102, 192, 175));
                         }
                         revalidate();
                         repaint();
@@ -228,7 +228,7 @@ public class Chess {
                     if (point.x == grid.x && point.y == grid.y) {
                         flag = false;
                         isHighLighted = true;
-                        setBackground(java.awt.Color.YELLOW);
+                        setBackground(new java.awt.Color(102, 192, 175));
                         setOpaque(true);
                         break;
                     }
