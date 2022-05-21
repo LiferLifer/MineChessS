@@ -18,8 +18,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.Format;
 import java.util.ArrayList;
 
 public class Chess {
@@ -32,7 +34,7 @@ public class Chess {
     public static void main(String[] args) {
         View.window.setSize(960, 600);
         Game.setMaximumPlayer(2);
-        View.setName("Let's play the chesS");
+        View.setName("Let's play the chess");
         Game.setBoardSize(8, 8);
         Game.saver.checkSize(true); // 读档时检查存档棋盘大小
         Game.saver.setSlotNumber(5); // 存档数量
@@ -238,7 +240,69 @@ public class Chess {
                 repaint();
                 if (grid.hasPiece()) { // 绘制棋子，这里直接写文字了。加图片建议用JLabel的Icon。
                     Piece piece = (Piece) grid.getOwnedPiece();
-                    this.label.setText(piece.getName().name());
+//                    this.label.setText(piece.getName().name());
+                    BufferedImage bufferedImage;
+                    String m = piece.getName().name() + piece.getColor();
+                    String location = "";
+                    ImageIcon x = new ImageIcon();
+                    switch (m){
+                        case "BBLACK":
+                            x = new ImageIcon("src/main/resources/pieces/BBLACK.png");
+                            location = x.getDescription();
+                            break;
+                        case "BWHITE":
+                            x = new ImageIcon("src/main/resources/pieces/BWHITE.png");
+                            location = x.getDescription();
+                            break;
+                        case "KBLACK":
+                            x = new ImageIcon("src/main/resources/pieces/KBLACK.png");
+                            location = x.getDescription();
+                            break;
+                        case "KWHITE":
+                            x = new ImageIcon("src/main/resources/pieces/KWHITE.png");
+                            location = x.getDescription();
+                            break;
+                        case "NBLACK":
+                            x = new ImageIcon("src/main/resources/pieces/NBLACK.png");
+                            location = x.getDescription();
+                            break;
+                        case "NWHITE":
+                            x = new ImageIcon("src/main/resources/pieces/NWHITE.png");
+                            location = x.getDescription();
+                            break;
+                        case "PBLACK":
+                            x = new ImageIcon("src/main/resources/pieces/PBLACK.png");
+                            location = x.getDescription();
+                            break;
+                        case "PWHITE":
+                            x = new ImageIcon("src/main/resources/pieces/PWHITE.png");
+                            location = x.getDescription();
+                            break;
+                        case "QBLACK":
+                            x = new ImageIcon("src/main/resources/pieces/QBLACK.png");
+                            location = x.getDescription();
+                            break;
+                        case "QWHITE":
+                            x = new ImageIcon("src/main/resources/pieces/QWHITE.png");
+                            location = x.getDescription();
+                            break;
+                        case "RBLACK":
+                            x = new ImageIcon("src/main/resources/pieces/RBLACK.png");
+                            location = x.getDescription();
+                            break;
+                        case "RWHITE":
+                            x = new ImageIcon("src/main/resources/pieces/RWHITE.png");
+                            location = x.getDescription();
+                            break;
+                    }
+                    try {
+                        bufferedImage = ImageIO.read(new File(String.format("%s",location)));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    bufferedImage = bufferedImage.getSubimage(50,34,50,68);
+//                    bufferedImage.getScaledInstance(10,10,100);
+                    this.label.setIcon(new ImageIcon(bufferedImage));
                     if (piece.getColor() == Color.WHITE)
                         this.label.setForeground(java.awt.Color.WHITE);
                     else
