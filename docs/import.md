@@ -6,4 +6,4 @@
 4. 点击窗口左边的Modules，然后点击窗口偏上方的Dependencies
 5. 下面Export的上面有个+号，点击，然后选jars那个选项
 6. 选择你下载的jar包，然后**点窗口最下面的确认**
-7. 复制[examples/FIR](/src/main/java/examples/FIR)下的几个文件的代码到你自己的项目里，如果没问题的话带frame的那几个import应该就不红了。
+7. 复制[examples/FIR](//examples/FIR)下的几个文件的代码到你自己的项目里，如果没问题的话带frame的那几个import应该就不红了。
