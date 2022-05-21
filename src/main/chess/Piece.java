@@ -1,5 +1,3 @@
-package examples.Chess;
-
 import frame.Controller.Game;
 import frame.board.BasePiece;
 import frame.util.Point2D;
@@ -32,7 +30,7 @@ public class Piece extends BasePiece {
         ArrayList<Point2D> result = new ArrayList<>();
         switch (type) {
             case R:
-                for (int i = y + 1; i < 10; i++) {
+                for (int i = y + 1; i < 8; i++) {
                     if (checkBoardPosition(x, i) == color) break;
                     result.add(new Point2D(x, i));
                     if (checkBoardPosition(x, i) != Color.NULL) break;
@@ -42,7 +40,7 @@ public class Piece extends BasePiece {
                     result.add(new Point2D(x, i));
                     if (checkBoardPosition(x, i) != Color.NULL) break;
                 }
-                for (int i = x + 1; i < 9; i++) {
+                for (int i = x + 1; i < 8; i++) {
                     if (checkBoardPosition(i, y) == color) break;
                     result.add(new Point2D(i, y));
                     if (checkBoardPosition(i, y) != Color.NULL) break;

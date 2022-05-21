@@ -1,5 +1,3 @@
-package examples.Chess;
-
 import frame.board.BaseGrid;
 
 public class Grid extends BaseGrid {

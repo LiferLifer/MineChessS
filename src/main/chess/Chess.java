@@ -1,5 +1,3 @@
-package examples.Chess;
-
 import frame.Controller.Game;
 import frame.action.Action;
 import frame.action.ActionPerformType;
@@ -23,9 +21,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-// 建议在阅读FIR那个例子后再看这个。
-// 这是个实现了一部分棋子功能的象棋，并且加了一些视觉效果。
 
 public class Chess {
     // 全局变量

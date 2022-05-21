@@ -1,5 +1,3 @@
-package examples.Chess;
-
 import frame.board.BaseBoard;
 
 public class Board extends BaseBoard {
