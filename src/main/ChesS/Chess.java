@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Chess {
-    // 全局变量
+
     public static boolean isSelecting = false; // 当前是否选中棋准备落子
     public static Piece selectedPiece = null; // 选中的棋子
     public static ArrayList<Point2D> availablePositions = new ArrayList<>(); // 所有能走的格子位置
@@ -65,7 +65,7 @@ public class Chess {
                             if (piece.getColor() != Color.values()[Game.getCurrentPlayerIndex()]) {
                                 return ActionPerformType.FAIL; // 如果格子上棋子的颜色和玩家颜色不匹配，执行失败
                             }
-                            availablePositions = piece.getAvailablePositions(); // 拿所有能走的格子，存到全局变量
+                            availablePositions = piece.canMoveTo(); // 拿所有能走的格子，存到全局变量
                             selectedPiece = piece; // 全局变量存被选中的棋子
                             isSelecting = true;
 //                            AudioPlayer.playSound("src/main/resources/bbb.mp3"); //点击音效
@@ -79,7 +79,7 @@ public class Chess {
                                     this.removedPiece = (Piece) Game.getBoard().movePiece(selectedPiece.getX(), selectedPiece.getY(), x, y);
                                     if (this.removedPiece != null) {
                                         // 如果吃了子，记录最近一个被吃的子的类型（判断被吃的是不是将或者帅）
-                                        lastRemovedPieceType = this.removedPiece.getType();
+                                        lastRemovedPieceType = this.removedPiece.getName();
                                     }
                                     selectedPiece = null; // 清理全局变量
                                     availablePositions.clear();
@@ -126,13 +126,13 @@ public class Chess {
                 @Override
                 public ActionPerformType perform() {
                     if (!isSelecting) return ActionPerformType.FAIL; // 没选中或不是兵返回FAIL
-                    if (selectedPiece.getType() != Piece.PieceType.P) {
+                    if (selectedPiece.getName() != Piece.PieceType.P) {
                         selectedPiece = null; // 清理全局变量
                         availablePositions.clear();
                         return ActionPerformType.FAIL;
                     }
                     changedPiece = selectedPiece; // 记录改变的棋子，方便撤回
-                    selectedPiece.setType(Piece.PieceType.N); // 改变type
+                    selectedPiece.setName(Piece.PieceType.N); // 改变type
                     selectedPiece = null; // 清理全局变量
                     availablePositions.clear();
                     return ActionPerformType.SUCCESS;
@@ -140,7 +140,7 @@ public class Chess {
 
                 @Override
                 public void undo() {
-                    changedPiece.setType(Piece.PieceType.P); // 把记下来的棋子改回兵
+                    changedPiece.setName(Piece.PieceType.P); // 把记下来的棋子改回兵
                 }
             });
         });
@@ -165,7 +165,7 @@ public class Chess {
                     if (grid.hasPiece()) {
                         Piece piece = (Piece) grid.getOwnedPiece(); // 如果格子上有子，并且和当前玩家颜色不一样：
                         if (piece.getColor() == Color.values()[Game.getNextPlayerIndex()]) {
-                            if (!piece.getAvailablePositions().isEmpty()) { // 判断是不是能走。如果能走则返回false，不平局。
+                            if (!piece.canMoveTo().isEmpty()) { // 判断是不是能走。如果能走则返回false，不平局。
                                 return false;
                             }
                         }
@@ -238,7 +238,7 @@ public class Chess {
                 repaint();
                 if (grid.hasPiece()) { // 绘制棋子，这里直接写文字了。加图片建议用JLabel的Icon。
                     Piece piece = (Piece) grid.getOwnedPiece();
-                    this.label.setText(piece.getType().name());
+                    this.label.setText(piece.getName().name());
                     if (piece.getColor() == Color.WHITE)
                         this.label.setForeground(java.awt.Color.WHITE);
                     else

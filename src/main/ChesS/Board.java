@@ -1,5 +1,6 @@
 import frame.board.BaseBoard;
 
+//initialize the board
 public class Board extends BaseBoard {
 
     public Board(int width, int height) {
@@ -14,7 +15,7 @@ public class Board extends BaseBoard {
             }
         }
 
-        Piece.PieceType[] bottomLine = new Piece.PieceType[]{
+        Piece.PieceType[] Line = new Piece.PieceType[]{
                 Piece.PieceType.R,
                 Piece.PieceType.N,
                 Piece.PieceType.B,
@@ -25,10 +26,10 @@ public class Board extends BaseBoard {
                 Piece.PieceType.R
         };
         for (int i = 0; i < 8; i++) {
-            grids[i][0].setOwnedPiece(new Piece(i, 0, bottomLine[i], Color.WHITE));
+            grids[i][0].setOwnedPiece(new Piece(i, 0, Line[i], Color.WHITE));
         }
         for (int i = 7; i >=0 ; i--) {
-            grids[i][7].setOwnedPiece(new Piece(i, 7, bottomLine[i], Color.BLACK));
+            grids[i][7].setOwnedPiece(new Piece(i, 7, Line[i], Color.BLACK));
         }
 
         for (int i = 0; i < 8; i ++) {
