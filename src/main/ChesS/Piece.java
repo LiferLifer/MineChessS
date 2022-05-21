@@ -45,100 +45,103 @@ public class Piece extends BasePiece {
         return ((Piece) piece).color;
     }
 
+    private boolean checkBoundary(int x, int y){
+        if(x>=0 && x<8 && y>=0 && y<8){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public ArrayList<Point2D> canMoveTo() {
         ArrayList<Point2D> result = new ArrayList<>();
-        switch (name) {
-            case R:
-                for (int i = y + 1; i < 8; i++) {
-                    if (checkPieceColor(x, i) == color) break;
-                    result.add(new Point2D(x, i));
-                    if (checkPieceColor(x, i) != Color.NULL) break;
+        //move array
+        int[][] vector = new int[][]{{-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1}};
+
+        if(name==PieceType.R){
+            for(int i=1;i<8;i+=2){
+                for(int j=1;j<8;j++){
+                    if(checkBoundary(x+vector[i][0]*j, y+vector[i][1]*j)){
+                        if (checkPieceColor(x+vector[i][0]*j, y+vector[i][1]*j) == color) break;
+                        result.add(new Point2D(x+vector[i][0]*j, y+vector[i][1]*j));
+                        if (checkPieceColor(x+vector[i][0]*j, y+vector[i][1]*j) != Color.NULL) break;
+                    }
                 }
-                for (int i = y - 1; i >= 0; i--) {
-                    if (checkPieceColor(x, i) == color) break;
-                    result.add(new Point2D(x, i));
-                    if (checkPieceColor(x, i) != Color.NULL) break;
-                }
-                for (int i = x + 1; i < 8; i++) {
-                    if (checkPieceColor(i, y) == color) break;
-                    result.add(new Point2D(i, y));
-                    if (checkPieceColor(i, y) != Color.NULL) break;
-                }
-                for (int i = x - 1; i >= 0; i--) {
-                    if (checkPieceColor(i, y) == color) break;
-                    result.add(new Point2D(i, y));
-                    if (checkPieceColor(i, y) != Color.NULL) break;
-                }
-                break;
-            case N:
-                result.add(new Point2D(x + 1, y + 2));
-                result.add(new Point2D(x + 1, y - 2));
-                result.add(new Point2D(x - 1, y + 2));
-                result.add(new Point2D(x - 1, y - 2));
-                result.add(new Point2D(x + 2, y + 1));
-                result.add(new Point2D(x + 2, y - 1));
-                result.add(new Point2D(x - 2, y + 1));
-                result.add(new Point2D(x - 2, y - 1));
-                break;
-            case P:
-                if (color == Color.BLACK) {
+            }
+        }else if(name==PieceType.N){
+            result.add(new Point2D(x + 1, y + 2));
+            result.add(new Point2D(x + 1, y - 2));
+            result.add(new Point2D(x - 1, y + 2));
+            result.add(new Point2D(x - 1, y - 2));
+            result.add(new Point2D(x + 2, y + 1));
+            result.add(new Point2D(x + 2, y - 1));
+            result.add(new Point2D(x - 2, y + 1));
+            result.add(new Point2D(x - 2, y - 1));
+        }else if(name==PieceType.P){
+            if (color == Color.BLACK) {
+                if (checkBoundary(x, y - 1) && checkPieceColor(x, y - 1) != Color.WHITE){
                     result.add(new Point2D(x, y - 1));
-                    if (y < 5) {
-                        result.add(new Point2D(x - 1, y));
-                        result.add(new Point2D(x + 1, y));
-                    }
-                } else if (color == Color.WHITE) {
-                    result.add(new Point2D(x, y + 1));
-                    if (y > 4) {
-                        result.add(new Point2D(x - 1, y));
-                        result.add(new Point2D(x + 1, y));
+                }
+                if (y == 6) {
+                    if (checkBoundary(x, y - 2) && checkPieceColor(x, y - 2) != Color.WHITE){
+                        result.add(new Point2D(x, y - 2));
                     }
                 }
-                break;
-            case B:
-                result.add(new Point2D(x + 2, y + 2));
-                result.add(new Point2D(x + 2, y - 2));
-                result.add(new Point2D(x - 2, y + 2));
-                result.add(new Point2D(x - 2, y - 2));
-                result.removeIf(p -> {
-                    if (color == Color.WHITE) {
-                        return p.y > 4;
-                    } else {
-                        return p.y < 5;
+                if (checkBoundary(x + 1, y - 1) && checkPieceColor(x + 1, y - 1) == Color.WHITE){
+                    result.add(new Point2D(x + 1, y - 1));
+                }
+                if (checkBoundary(x - 1, y - 1) && checkPieceColor(x - 1, y - 1) == Color.WHITE){
+                    result.add(new Point2D(x - 1, y - 1));
+                }
+            }else if(color == Color.WHITE) {
+                if (checkBoundary(x, y + 1) && checkPieceColor(x, y + 1) != Color.BLACK){
+                    result.add(new Point2D(x, y + 1));
+                }
+                if (y == 1) {
+                    if (checkBoundary(x, y + 2) && checkPieceColor(x, y + 2) != Color.BLACK){
+                        result.add(new Point2D(x, y + 2));
                     }
-                });
-                break;
-            case K:
-                result.add(new Point2D(x + 2, y + 2));
-                result.add(new Point2D(x + 2, y - 2));
-                result.add(new Point2D(x - 2, y + 2));
-                result.add(new Point2D(x - 2, y - 2));
-                result.removeIf(p -> {
-                    if (color == Color.WHITE) {
-                        return p.y > 4;
-                    } else {
-                        return p.y < 5;
+                }
+                if (checkBoundary(x + 1, y + 1) && checkPieceColor(x + 1, y + 1) == Color.BLACK){
+                    result.add(new Point2D(x + 1, y + 1));
+                }
+                if (checkBoundary(x - 1, y + 1) && checkPieceColor(x - 1, y + 1) == Color.BLACK){
+                    result.add(new Point2D(x - 1, y + 1));
+                }
+            }
+        }else if(name==PieceType.B){
+            for(int i=0;i<8;i+=2){
+                for(int j=1;j<8;j++){
+                    if(checkBoundary(x+vector[i][0]*j, y+vector[i][1]*j)){
+                        if (checkPieceColor(x+vector[i][0]*j, y+vector[i][1]*j) == color) break;
+                        result.add(new Point2D(x+vector[i][0]*j, y+vector[i][1]*j));
+                        if (checkPieceColor(x+vector[i][0]*j, y+vector[i][1]*j) != Color.NULL) break;
                     }
-                });
-                break;
-            case Q:
-                result.add(new Point2D(x + 2, y + 2));
-                result.add(new Point2D(x + 2, y - 2));
-                result.add(new Point2D(x - 2, y + 2));
-                result.add(new Point2D(x - 2, y - 2));
-                result.removeIf(p -> {
-                    if (color == Color.WHITE) {
-                        return p.y > 4;
-                    } else {
-                        return p.y < 5;
+                }
+            }
+        }else if(name==PieceType.K){
+            result.add(new Point2D(x + 1, y));
+            result.add(new Point2D(x, y - 1));
+            result.add(new Point2D(x - 1, y));
+            result.add(new Point2D(x, y + 1));
+            result.add(new Point2D(x + 1, y + 1));
+            result.add(new Point2D(x + 1, y - 1));
+            result.add(new Point2D(x - 1, y + 1));
+            result.add(new Point2D(x - 1, y - 1));
+        }else if(name==PieceType.Q){
+            for(int i=0;i<8;i++){
+                for(int j=1;j<8;j++){
+                    if(checkBoundary(x+vector[i][0]*j, y+vector[i][1]*j)){
+                        if (checkPieceColor(x+vector[i][0]*j, y+vector[i][1]*j) == color) break;
+                        result.add(new Point2D(x+vector[i][0]*j, y+vector[i][1]*j));
+                        if (checkPieceColor(x+vector[i][0]*j, y+vector[i][1]*j) != Color.NULL) break;
                     }
-                });
-                break;
+                }
+            }
         }
-        result.removeIf(p -> p.x < 0 || p.x >= 9 || p.y < 0 || p.y >= 10);
+
+        result.removeIf(p -> p.x < 0 || p.x >= 8 || p.y < 0 || p.y >= 8);
         result.removeIf(p -> checkPieceColor(p.x, p.y) == color);
         return result;
     }
 
-    
 }
