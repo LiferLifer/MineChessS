@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 public class Chess {
 
     public static boolean isSelecting = false;
@@ -35,7 +36,7 @@ public class Chess {
     }
 
     public static void main(String[] args) {
-        View.window.setSize(960, 600);
+        View.window.setSize(850, 600);
         Game.setMaximumPlayer(2);
 //        View.setName("Let's play the chesS");
         View.setName("\n");
@@ -43,7 +44,11 @@ public class Chess {
         Game.saver.checkSize(true); // 读档时检查存档棋盘大小
         Game.saver.setSlotNumber(5); // 存档数量
 
-        AudioPlayer.playBgm("src/main/resources/bgm1.mp3");
+        MusicPlayer bgm = new MusicPlayer("src/main/resources/坂本龍一 - Merry Christmas Mr. Lawrence.mp3");
+//        bgm.start();
+//        bgm.stop();
+
+//        AudioPlayer.playBgm("src/main/resources/bgm1.mp3");
 //        GameStage.instance().setBgm("src/main/resources/坂本龍一 - Merry Christmas Mr. Lawrence.mp3");
 
         Game.registerBoard(Board.class);
@@ -123,35 +128,35 @@ public class Chess {
             return null; // 其他鼠标按键返回null
         });
 
-        // 加一个按钮，可以把兵变成🏇。我也不知道为什么要加这个(
-        BackgroundImagePanel sidePanel = new BackgroundImagePanel();
-        JButton someButton = new JButton("Promotion");
-        someButton.addActionListener((e) -> { // 手动写一个按钮，按下时调用Game.performAction，然后继承一个Action传进去
-            Game.performAction(new Action(true) {
-                Piece changedPiece = null; // 记录被升变的棋子
-                @Override
-                public ActionPerformType perform() {
-                    if (!isSelecting) return ActionPerformType.FAIL; // 没选中或不是兵返回FAIL
-                    if (selectedPiece.getName() != Piece.Type.P) {
-                        selectedPiece = null; // 清理全局变量
-                        availablePositions.clear();
-                        return ActionPerformType.FAIL;
-                    }
-                    changedPiece = selectedPiece; // 记录改变的棋子，方便撤回
-                    selectedPiece.setName(Piece.Type.N); // 改变type
-                    selectedPiece = null; // 清理全局变量
-                    availablePositions.clear();
-                    return ActionPerformType.SUCCESS;
-                }
-
-                @Override
-                public void undo() {
-                    changedPiece.setName(Piece.Type.P); // 把记下来的棋子改回兵
-                }
-            });
-        });
-        sidePanel.add(someButton);
-        GameStage.instance().add("East", sidePanel); // GameStage的布局管理器是BorderPanel，可以在东西南北添加Panel。框架在南北提供了两个，这里是在东边添加。
+//        // 加一个按钮
+//        BackgroundImagePanel sidePanel = new BackgroundImagePanel();
+//        JButton someButton = new JButton("Promotion");
+//        someButton.addActionListener((e) -> { // 手动写一个按钮，按下时调用Game.performAction，然后继承一个Action传进去
+//            Game.performAction(new Action(true) {
+//                Piece changedPiece = null; // 记录被升变的棋子
+//                @Override
+//                public ActionPerformType perform() {
+//                    if (!isSelecting) return ActionPerformType.FAIL; // 没选中或不是兵返回FAIL
+//                    if (selectedPiece.getName() != Piece.Type.P) {
+//                        selectedPiece = null; // 清理全局变量
+//                        availablePositions.clear();
+//                        return ActionPerformType.FAIL;
+//                    }
+//                    changedPiece = selectedPiece; // 记录改变的棋子，方便撤回
+//                    selectedPiece.setName(Piece.Type.N); // 改变type
+//                    selectedPiece = null; // 清理全局变量
+//                    availablePositions.clear();
+//                    return ActionPerformType.SUCCESS;
+//                }
+//
+//                @Override
+//                public void undo() {
+//                    changedPiece.setName(Piece.Type.P); // 把记下来的棋子改回兵
+//                }
+//            });
+//        });
+//        sidePanel.add(someButton);
+//        GameStage.instance().add("East", sidePanel); // GameStage的布局管理器是BorderPanel，可以在东西南北添加Panel。框架在南北提供了两个，这里是在东边添加。
 
 
         // 胜利条件：刚才被吃的是将/帅，则吃子的玩家赢
@@ -183,7 +188,7 @@ public class Chess {
         });
         try {
             // 设置背景图片。BoardView有个构造函数支持直接设置。其他所有JPanel都是魔改过的，可以直接加图片。
-            Image image = ImageIO.read(new File("src/main/resources/img.png"));
+            Image image = ImageIO.read(new File("src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
             Image image2 = ImageIO.read(new File("src/main/resources/bg2.png"));
             View.setBoardViewPattern(() -> new BoardView(image) {});
             MenuStage.instance().setBackgroundImage(image2);
@@ -304,7 +309,7 @@ public class Chess {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    bufferedImage = bufferedImage.getSubimage(50,34,45,65);
+                    bufferedImage = bufferedImage.getSubimage(50,34,50,70);
 //                    bufferedImage.getScaledInstance(10,10,100);
                     this.label.setIcon(new ImageIcon(bufferedImage));
                     if (piece.getColor() == Color.WHITE)
