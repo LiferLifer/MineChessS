@@ -35,7 +35,7 @@ public class Chess {
     public Chess() throws IOException {}
 
     public static void main(String[] args) {
-        View.window.setSize(850, 600);
+        View.window.setSize(950, 650);
         Game.setMaximumPlayer(2);
 //        View.setName("Let's play the chesS");
         View.setName("\n");
@@ -54,6 +54,7 @@ public class Chess {
         //register board
         Game.registerBoard(Board.class);
 
+        //piece action
         Game.registerGridAction((x, y) -> true, (x, y, mouseButton) -> {
             if (mouseButton == 1) {
                 int selectedX = 0, selectedY = 0;
@@ -91,7 +92,6 @@ public class Chess {
                                 // 获取被吃掉的棋子，存到Action对象里
                                 this.removedPiece = (Piece) Game.getBoard().movePiece(selectedPiece.getX(), selectedPiece.getY(), x, y);
                                 if (this.removedPiece != null) {
-                                    // 如果吃了子，记录最近一个被吃的子的类型（判断被吃的是不是将或者帅）
                                     lastRemovedType = this.removedPiece.getName();
                                 }
                                 selectedPiece = null;
@@ -162,6 +162,8 @@ public class Chess {
 
 
         // 胜利条件：刚才被吃的是将/帅，则吃子的玩家赢
+
+        //win judge
         Game.setPlayerWinningJudge((player -> {
             return lastRemovedType == Piece.Type.K
                     && Game.getCurrentPlayerIndex() == player.getId();
@@ -316,7 +318,7 @@ public class Chess {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    bufferedImage = bufferedImage.getSubimage(50,34,50,70);
+                    bufferedImage = bufferedImage.getSubimage(11,12,65,65);
 //                    bufferedImage.getScaledInstance(10,10,100);
                     this.label.setIcon(new ImageIcon(bufferedImage));
                     if (piece.getColor() == Color.WHITE)
