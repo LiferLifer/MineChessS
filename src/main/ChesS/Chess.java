@@ -9,13 +9,10 @@ import frame.util.Point2D;
 import frame.view.View;
 import frame.view.board.BoardView;
 import frame.view.board.GridPanelView;
-import frame.view.components.BackgroundImagePanel;
 import frame.view.sound.AudioPlayer;
 import frame.view.stage.GameStage;
 import frame.view.stage.MenuStage;
 import frame.view.stage.RoomStage;
-import frame.view.stage.LoadStage;
-import frame.view.stage.RankingStage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,7 +29,7 @@ public class Chess {
 
     public static boolean isSelecting = false;
     public static Piece selectedPiece = null;
-    public static ArrayList<Point2D> availablePositions = new ArrayList<>();
+    public static ArrayList<Point2D> canMovePositions = new ArrayList<>();
     public static Piece.Type lastRemovedType;
 
     public Chess() throws IOException {}
@@ -50,68 +47,70 @@ public class Chess {
 //        bgm.start();
 //        bgm.stop();
 
+//        MenuStage.instance().setBgm("src/main/resources/bgm1.mp3");
 //        AudioPlayer.playBgm("src/main/resources/bgm1.mp3");
 //        GameStage.instance().setBgm("src/main/resources/坂本龍一 - Merry Christmas Mr. Lawrence.mp3");
 
+        //register board
         Game.registerBoard(Board.class);
 
-        // 基本流程：点一下选中棋子，高亮可以走的格子，然后点高亮的格子落子
         Game.registerGridAction((x, y) -> true, (x, y, mouseButton) -> {
-            if (mouseButton == 1) { // 左键
-                int lastX = 0, lastY = 0; // 这里到return之前是用来给undo记录坐标的。
-                if (selectedPiece != null) { // 如果选中了棋子，就把选中的棋子的坐标存下来。
-                    lastX = selectedPiece.getX();
-                    lastY = selectedPiece.getY();
+            if (mouseButton == 1) {
+                int selectedX = 0, selectedY = 0;
+                if (selectedPiece != null) {
+                    selectedX = selectedPiece.getX();
+                    selectedY = selectedPiece.getY();
                 }
-                int finalLastX = lastX; // 这里和lambda表达式的捕获有关系。lambda里面用外面的值的时候，会把外面的值复制一份存到里面。
-                int finalLastY = lastY; // 复制的时候需要确保外面的变量不会变，所以有这两行。不理解的话抄下来也行。。。
+                int copyLastX = selectedX;
+                int copyLastY = selectedY;
+
                 return new Action(true) {
 
-                    Piece removedPiece = null; // 类中存被吃的棋子，undo的时候放回去。
+                Piece removedPiece = null;
 
-                    @Override
-                    public ActionPerformType perform() {
-                        if (!isSelecting) { // 没选中棋子的时候
-                            BaseGrid grid = Game.getBoard().getGrid(x, y);
-                            if (!grid.hasPiece()) return ActionPerformType.FAIL; // 如果格子上没棋子，Action执行失败
-                            Piece piece = (Piece) grid.getOwnedPiece();
-                            if (piece.getColor() != Color.values()[Game.getCurrentPlayerIndex()]) {
-                                return ActionPerformType.FAIL; // 如果格子上棋子的颜色和玩家颜色不匹配，执行失败
-                            }
-                            availablePositions = piece.canMoveTo(); // 拿所有能走的格子，存到全局变量
-                            selectedPiece = piece; // 全局变量存被选中的棋子
-                            isSelecting = true;
-//                            AudioPlayer.playSound("src/main/resources/bbb.mp3"); //点击音效
-                            return ActionPerformType.PENDING; // 执行结果为PENDING，玩家这一步对棋盘没有更改，需要之后的Action
-                            // 撤销或者FAIL时会把之前所有的PENDING都撤掉，详见文档
-                        } else { // 选中棋子的时候
-                            isSelecting = false; // 解除选择
-                            for (Point2D point : availablePositions) { // 判断点击的格子是否能走
-                                if (point.x == x && point.y == y) {
-                                    // 获取被吃掉的棋子，存到Action对象里
-                                    this.removedPiece = (Piece) Game.getBoard().movePiece(selectedPiece.getX(), selectedPiece.getY(), x, y);
-                                    if (this.removedPiece != null) {
-                                        // 如果吃了子，记录最近一个被吃的子的类型（判断被吃的是不是将或者帅）
-                                        lastRemovedType = this.removedPiece.getName();
-                                    }
-                                    selectedPiece = null; // 清理全局变量
-                                    availablePositions.clear();
-//                                    AudioPlayer.playSound("src/main/resources/ccc.mp3"); //点击音效
-                                    return ActionPerformType.SUCCESS; // Action执行成功
-                                }
-                            }
-                            selectedPiece = null; // 清理全局变量
-                            availablePositions.clear();
-                            EventCenter.publish(new BoardChangeEvent(this));
-                            return ActionPerformType.FAIL; // 格子不能走，执行失败
+                @Override
+                public ActionPerformType perform() {
+                    if (!isSelecting) {
+                        BaseGrid selectedGrid = Game.getBoard().getGrid(x, y);
+                        if (!selectedGrid.hasPiece())
+                            return ActionPerformType.FAIL;
+                        Piece piece = (Piece) selectedGrid.getOwnedPiece();
+                        if (piece.getColor() != Color.values()[Game.getCurrentPlayerIndex()]) {
+                            return ActionPerformType.FAIL;
                         }
+                        canMovePositions = piece.canMoveTo();
+                        selectedPiece = piece; // 全局变量存被选中的棋子
+                        isSelecting = true;
+                        AudioPlayer.playSound("src/main/resources/Click on the sound effects.wav");
+                        return ActionPerformType.PENDING; // 执行结果为PENDING，玩家这一步对棋盘没有更改，需要之后的Action
+                        // 撤销或者FAIL时会把之前所有的PENDING都撤掉，详见文档
+                    } else {
+                        isSelecting = false;
+                        for (Point2D point : canMovePositions) { // 判断点击的格子是否能走
+                            if (point.x == x && point.y == y) {
+                                // 获取被吃掉的棋子，存到Action对象里
+                                this.removedPiece = (Piece) Game.getBoard().movePiece(selectedPiece.getX(), selectedPiece.getY(), x, y);
+                                if (this.removedPiece != null) {
+                                    // 如果吃了子，记录最近一个被吃的子的类型（判断被吃的是不是将或者帅）
+                                    lastRemovedType = this.removedPiece.getName();
+                                }
+                                selectedPiece = null;
+                                canMovePositions.clear();
+                                AudioPlayer.playSound("src/main/resources/martial arts striking.wav");
+                                return ActionPerformType.SUCCESS;
+                            }
+                        }
+
+                        selectedPiece = null;
+                        canMovePositions.clear();
+                        EventCenter.publish(new BoardChangeEvent(this));
+                        return ActionPerformType.FAIL;
                     }
+                }
 
                     @Override
                     public void undo() {
-                        // 把这一个Action走的棋退回到之前的位置去。
-                        // 这里的x和y, finalX和finalY都是之前Action执行的时候复制进来的，不会有改动，所以可以用
-                        Game.getBoard().movePiece(x, y, finalLastX, finalLastY);
+                        Game.getBoard().movePiece(x, y, copyLastX, copyLastY);
                         if (removedPiece != null) { // 如果这个Action吃了子，把被吃的子放回去
                             Game.getBoard().getGrid(x, y).setOwnedPiece(removedPiece);
                         }
@@ -123,14 +122,15 @@ public class Chess {
                         // 比如说，刚才高亮的时候记录了全局变量。
                         // 如果是在选中时撤销，由于撤销PENDING的Action不会调用undo，所以需要在这里清理全局变量。
                         selectedPiece = null;
-                        availablePositions.clear();
+                        canMovePositions.clear();
                     }
+
                 };
             }
-            return null; // 其他鼠标按键返回null
+            return null;
         });
 
-//        // 加一个按钮
+
 //        BackgroundImagePanel sidePanel = new BackgroundImagePanel();
 //        JButton someButton = new JButton("Promotion");
 //        someButton.addActionListener((e) -> { // 手动写一个按钮，按下时调用Game.performAction，然后继承一个Action传进去
@@ -237,7 +237,7 @@ public class Chess {
             @Override
             public void redraw(BaseGrid grid) {
                 boolean flag = true;
-                for (Point2D point : availablePositions) { // 所有可以走的格子都高亮
+                for (Point2D point : canMovePositions) {
                     if (point.x == grid.x && point.y == grid.y) {
                         flag = false;
                         isHighLighted = true;
@@ -349,7 +349,7 @@ public class Chess {
         reset.addActionListener((e) -> {
             isSelecting = false;
             selectedPiece = null;
-            availablePositions = new ArrayList<>();
+            canMovePositions = new ArrayList<>();
             lastRemovedType = null;
             Game.init();
         });
