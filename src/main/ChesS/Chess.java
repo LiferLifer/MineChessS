@@ -13,6 +13,9 @@ import frame.view.components.BackgroundImagePanel;
 import frame.view.sound.AudioPlayer;
 import frame.view.stage.GameStage;
 import frame.view.stage.MenuStage;
+import frame.view.stage.RoomStage;
+import frame.view.stage.LoadStage;
+import frame.view.stage.RankingStage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,8 +35,7 @@ public class Chess {
     public static ArrayList<Point2D> availablePositions = new ArrayList<>();
     public static Piece.Type lastRemovedType;
 
-    public Chess() throws IOException {
-    }
+    public Chess() throws IOException {}
 
     public static void main(String[] args) {
         View.window.setSize(850, 600);
@@ -186,12 +188,17 @@ public class Chess {
             // 如果都不能走则平局。
             return true;
         });
+
+        //change the background
         try {
-            // 设置背景图片。BoardView有个构造函数支持直接设置。其他所有JPanel都是魔改过的，可以直接加图片。
-            Image image = ImageIO.read(new File("src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
-            Image image2 = ImageIO.read(new File("src/main/resources/bg2.png"));
-            View.setBoardViewPattern(() -> new BoardView(image) {});
-            MenuStage.instance().setBackgroundImage(image2);
+            Image chessBackground = ImageIO.read(new File("src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
+            Image menuBackground = ImageIO.read(new File("src/main/resources/menu.png"));
+            Image roomBackground = ImageIO.read(new File("src/main/resources/room.png"));
+//            Image gameBackground = ImageIO.read(new File("src/main/resources/game.png"));
+            View.setBoardViewPattern(() -> new BoardView(chessBackground) {});
+            MenuStage.instance().setBackgroundImage(menuBackground);
+            RoomStage.instance().setBackgroundImage(roomBackground);
+//            GameStage.instance().setBackgroundImage(gameBackground);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -206,9 +213,9 @@ public class Chess {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         super.mouseEntered(e);
-                        setBackground(new java.awt.Color(2, 158, 143)); //高亮背景色
-                        setOpaque(true); // 背景设置为不透明
-                        revalidate(); // 这两行建议在改ui之后都加。。
+                        setBackground(new java.awt.Color(2, 158, 143));
+                        setOpaque(true);
+                        revalidate();
                         repaint();
                     }
 
@@ -216,9 +223,9 @@ public class Chess {
                     public void mouseExited(MouseEvent e) {
                         super.mouseExited(e);
                         hasMouseEntered = false;
-                        if (!isHighLighted) { // 判断是否高亮，如果没高亮就背景透明
+                        if (!isHighLighted) {
                             setOpaque(false);
-                        } else { // 高亮的话设回高亮的颜色（黄色）
+                        } else {
                             setBackground(new java.awt.Color(102, 192, 175));
                         }
                         revalidate();

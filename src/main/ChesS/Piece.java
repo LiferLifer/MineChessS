@@ -45,6 +45,7 @@ public class Piece extends BasePiece {
         return ((Piece) piece).color;
     }
 
+    //check if beyond boundary
     private boolean checkBoundary(int x, int y){
         return x >= 0 && x < 8 && y >= 0 && y < 8;
     }
