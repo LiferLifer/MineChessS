@@ -14,6 +14,7 @@ import frame.view.sound.AudioPlayer;
 import frame.view.stage.GameStage;
 import frame.view.stage.MenuStage;
 import frame.view.stage.RoomStage;
+import frame.view.stage.LoadStage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -110,20 +111,44 @@ public class Chess {
         MenuStage.instance().newGame.setForeground(new java.awt.Color(169, 183, 198));
         MenuStage.instance().rank.setForeground(new java.awt.Color(169, 183, 198));
 
+        RoomStage.instance().textHeight.setVisible(false);
+        RoomStage.instance().textWidth.setVisible(false);
+
+        LoadStage.instance().title.setText("{ LOAD }");
+        LoadStage.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
+        LoadStage.instance().title.setForeground(new java.awt.Color(251, 251, 251));
+        LoadStage.instance().fileChooserButton.setText("Select Files");
+        LoadStage.instance().fileChooserButton.setBackground(new java.awt.Color(169, 183, 198));
+        LoadStage.instance().fileChooserButton.setForeground(new java.awt.Color(60, 63, 65));
+        LoadStage.instance().back.setText("Back  Menu");
+        LoadStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
+        LoadStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+
+        RoomStage.instance().back.setText("Menu ");
+        RoomStage.instance().back.setFont(new Font("INK Free",Font.PLAIN,20));
+        RoomStage.instance().back.setBackground(new java.awt.Color(169, 183, 198));
+        RoomStage.instance().back.setForeground(new java.awt.Color(60, 63, 65));
+        RoomStage.instance().start.setFont(new Font("INK Free",Font.PLAIN,20));
+        RoomStage.instance().start.setBackground(new java.awt.Color(169, 183, 198));
+        RoomStage.instance().start.setForeground(new java.awt.Color(60, 63, 65));
+
+        GameStage.instance().menuButton.setBackground(new java.awt.Color(248, 248, 248));
+        GameStage.instance().undoButton.setBackground(new java.awt.Color(248, 248, 248));
+        GameStage.instance().saveButton.setBackground(new java.awt.Color(248, 248, 248));
 
         //set the bgm
-        MusicPlayer bgm = new MusicPlayer("src/main/resources/坂本龍一 - Merry Christmas Mr. Lawrence.mp3");
+        MusicPlayer bgm = new MusicPlayer("src/main/resources/eS=S - 8bit Faith.mp3");
 
         //change the background
         try {
             Image chessBackground = ImageIO.read(new File("src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
             Image menuBackground = ImageIO.read(new File("src/main/resources/menu.png"));
             Image roomBackground = ImageIO.read(new File("src/main/resources/room.png"));
-//            Image gameBackground = ImageIO.read(new File("src/main/resources/game.png"));
+            Image loadBackground = ImageIO.read(new File("src/main/resources/game.png"));
             View.setBoardViewPattern(() -> new BoardView(chessBackground) {});
             MenuStage.instance().setBackgroundImage(menuBackground);
             RoomStage.instance().setBackgroundImage(roomBackground);
-//            GameStage.instance().setBackgroundImage(gameBackground);
+            LoadStage.instance().setBackgroundImage(loadBackground);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,6 +160,7 @@ public class Chess {
         Game.registerBoard(Board.class);
 
         JButton resetGame = new JButton("Reset Game");
+        resetGame.setBackground(new java.awt.Color(248, 248, 248));;
         resetGame.addActionListener((e) -> {
             Game.init();
             clear();
@@ -142,8 +168,10 @@ public class Chess {
 
         JLabel currentPlayerLabel = new JLabel();
         EventCenter.subscribe(BoardChangeEvent.class, e -> currentPlayerLabel.setText((ChessColor.values()[Game.getCurrentPlayerIndex()].name())+"'s turn"));
+        currentPlayerLabel.setFont(new Font("INK Free",Font.BOLD,25));
 
         JButton loadButton = new JButton("Load Game");
+        loadButton.setBackground(new java.awt.Color(248, 248, 248));
         loadButton.addActionListener((e) -> {
             View.changeStage("MenuStage");
             View.changeStage("LoadStage");
@@ -193,7 +221,7 @@ public class Chess {
                             canMovePositions = piece.canMoveTo();
                             selectedPiece = piece; // 全局变量存被选中的棋子
                             isSelecting = true;
-                            AudioPlayer.playSound("src/main/resources/Click on the sound effects.wav");
+                            AudioPlayer.playSound("src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
                             return ActionPerformType.PENDING; // 执行结果为PENDING，玩家这一步对棋盘没有更改，需要之后的Action
                             // 撤销或者FAIL时会把之前所有的PENDING都撤掉，详见文档
                         } else {
@@ -207,7 +235,7 @@ public class Chess {
                                     }
                                     selectedPiece = null;
                                     canMovePositions.clear();
-                                    AudioPlayer.playSound("src/main/resources/martial arts striking.wav");
+                                    AudioPlayer.playSound("src/main/resources/pman - Freesound.wav");
                                     return ActionPerformType.SUCCESS;
                                 }
                             }
