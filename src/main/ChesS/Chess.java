@@ -9,6 +9,7 @@ import frame.util.Point2D;
 import frame.view.View;
 import frame.view.board.BoardView;
 import frame.view.board.GridPanelView;
+import frame.view.board.GridView;
 import frame.view.sound.AudioPlayer;
 import frame.view.stage.GameStage;
 import frame.view.stage.MenuStage;
@@ -24,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static java.awt.Image.SCALE_SMOOTH;
+
 
 public class Chess {
 
@@ -35,7 +38,7 @@ public class Chess {
     public Chess() throws IOException {}
 
     public static void main(String[] args) {
-        View.window.setSize(950, 650);
+        View.window.setSize(950, 600);
         Game.setMaximumPlayer(2);
 //        View.setName("Let's play the chesS");
         View.setName("\n");
@@ -57,11 +60,15 @@ public class Chess {
         //piece action
         Game.registerGridAction((x, y) -> true, (x, y, mouseButton) -> {
             if (mouseButton == 1) {
-                int selectedX = 0, selectedY = 0;
+
+                int selectedX = 0;
+                int selectedY = 0;
+
                 if (selectedPiece != null) {
                     selectedX = selectedPiece.getX();
                     selectedY = selectedPiece.getY();
                 }
+
                 int copyLastX = selectedX;
                 int copyLastY = selectedY;
 
@@ -206,11 +213,12 @@ public class Chess {
         }
 
         View.setGridViewPattern(() -> new GridPanelView() {
-            boolean isHighLighted = false, hasMouseEntered = false;
+            boolean isHighLighted = false;
+            boolean hasMouseEntered = false;
 
             @Override
             public void init() {
-                // 这里是鼠标移动到格子上时高亮
+                //highlight
                 addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
@@ -318,9 +326,9 @@ public class Chess {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    bufferedImage = bufferedImage.getSubimage(11,12,65,65);
-//                    bufferedImage.getScaledInstance(10,10,100);
-                    this.label.setIcon(new ImageIcon(bufferedImage));
+//                    bufferedImage = bufferedImage.getSubimage(12,12,65,65);
+//                    bufferedImage.getScaledInstance(6,6,SCALE_SMOOTH);
+                    this.label.setIcon(new ImageIcon(bufferedImage.getScaledInstance(60,60,SCALE_SMOOTH)));
                     if (piece.getColor() == Color.WHITE)
                         this.label.setForeground(java.awt.Color.WHITE);
                     else

@@ -7,6 +7,7 @@ public class Board extends BaseBoard {
         super(width, height);
     }
 
+
     @Override
     public void init() {
         for (int i = 0; i < getWidth(); i++) {
