@@ -6,15 +6,15 @@ import java.util.ArrayList;
 
 public class Piece extends BasePiece {
     
-    public enum PieceType {
+    public enum Type {
         Q,R,B,N,K,P
     }
     //classify by color: white, black, and null
 
-    private PieceType name;
+    private Type name;
     private final Color color;
     
-    public Piece(int x, int y, PieceType name, Color color) {
+    public Piece(int x, int y, Type name, Color color) {
         super(x, y);
         this.name = name;
         this.color = color;
@@ -23,7 +23,7 @@ public class Piece extends BasePiece {
     public Color getColor() {
         return color;
     }
-    public PieceType getName() {
+    public Type getName() {
         return name;
     }
     public int getX() {
@@ -33,7 +33,7 @@ public class Piece extends BasePiece {
         return y;
     }
     
-    public void setName(PieceType name) {
+    public void setName(Type name) {
         this.name = name;
     }
 
@@ -52,12 +52,13 @@ public class Piece extends BasePiece {
             return false;
         }
     }
+
     public ArrayList<Point2D> canMoveTo() {
         ArrayList<Point2D> result = new ArrayList<>();
         //move array
         int[][] vector = new int[][]{{-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1},{0,-1}};
 
-        if(name==PieceType.R){
+        if(name== Type.R){
             for(int i=1;i<8;i+=2){
                 for(int j=1;j<8;j++){
                     if(checkBoundary(x+vector[i][0]*j, y+vector[i][1]*j)){
@@ -67,7 +68,7 @@ public class Piece extends BasePiece {
                     }
                 }
             }
-        }else if(name==PieceType.N){
+        }else if(name== Type.N){
             result.add(new Point2D(x + 1, y + 2));
             result.add(new Point2D(x + 1, y - 2));
             result.add(new Point2D(x - 1, y + 2));
@@ -76,7 +77,7 @@ public class Piece extends BasePiece {
             result.add(new Point2D(x + 2, y - 1));
             result.add(new Point2D(x - 2, y + 1));
             result.add(new Point2D(x - 2, y - 1));
-        }else if(name==PieceType.P){
+        }else if(name== Type.P){
             if (color == Color.BLACK) {
                 if (checkBoundary(x, y - 1) && checkPieceColor(x, y - 1) != Color.WHITE){
                     result.add(new Point2D(x, y - 1));
@@ -108,7 +109,7 @@ public class Piece extends BasePiece {
                     result.add(new Point2D(x - 1, y + 1));
                 }
             }
-        }else if(name==PieceType.B){
+        }else if(name== Type.B){
             for(int i=0;i<8;i+=2){
                 for(int j=1;j<8;j++){
                     if(checkBoundary(x+vector[i][0]*j, y+vector[i][1]*j)){
@@ -118,7 +119,7 @@ public class Piece extends BasePiece {
                     }
                 }
             }
-        }else if(name==PieceType.K){
+        }else if(name== Type.K){
             result.add(new Point2D(x + 1, y));
             result.add(new Point2D(x, y - 1));
             result.add(new Point2D(x - 1, y));
@@ -127,7 +128,7 @@ public class Piece extends BasePiece {
             result.add(new Point2D(x + 1, y - 1));
             result.add(new Point2D(x - 1, y + 1));
             result.add(new Point2D(x - 1, y - 1));
-        }else if(name==PieceType.Q){
+        }else if(name== Type.Q){
             for(int i=0;i<8;i++){
                 for(int j=1;j<8;j++){
                     if(checkBoundary(x+vector[i][0]*j, y+vector[i][1]*j)){

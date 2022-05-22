@@ -15,15 +15,15 @@ public class Board extends BaseBoard {
             }
         }
 
-        Piece.PieceType[] Line = new Piece.PieceType[]{
-                Piece.PieceType.R,
-                Piece.PieceType.N,
-                Piece.PieceType.B,
-                Piece.PieceType.Q,
-                Piece.PieceType.K,
-                Piece.PieceType.B,
-                Piece.PieceType.N,
-                Piece.PieceType.R
+        Piece.Type[] Line = new Piece.Type[]{
+                Piece.Type.R,
+                Piece.Type.N,
+                Piece.Type.B,
+                Piece.Type.Q,
+                Piece.Type.K,
+                Piece.Type.B,
+                Piece.Type.N,
+                Piece.Type.R
         };
         for (int i = 0; i < 8; i++) {
             grids[i][0].setOwnedPiece(new Piece(i, 0, Line[i], Color.WHITE));
@@ -33,10 +33,10 @@ public class Board extends BaseBoard {
         }
 
         for (int i = 0; i < 8; i ++) {
-            grids[i][1].setOwnedPiece(new Piece(i, 1, Piece.PieceType.P, Color.WHITE));
+            grids[i][1].setOwnedPiece(new Piece(i, 1, Piece.Type.P, Color.WHITE));
         }
         for (int i = 0; i < 8; i ++) {
-            grids[i][6].setOwnedPiece(new Piece(i, 6, Piece.PieceType.P, Color.BLACK));
+            grids[i][6].setOwnedPiece(new Piece(i, 6, Piece.Type.P, Color.BLACK));
         }
     }
 }

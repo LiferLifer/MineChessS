@@ -10,6 +10,7 @@ import frame.view.View;
 import frame.view.board.BoardView;
 import frame.view.board.GridPanelView;
 import frame.view.components.BackgroundImagePanel;
+import frame.view.sound.AudioPlayer;
 import frame.view.stage.GameStage;
 import frame.view.stage.MenuStage;
 
@@ -26,21 +27,25 @@ import java.util.ArrayList;
 
 public class Chess {
 
-    public static boolean isSelecting = false; // 当前是否选中棋准备落子
-    public static Piece selectedPiece = null; // 选中的棋子
-    public static ArrayList<Point2D> availablePositions = new ArrayList<>(); // 所有能走的格子位置
-    public static Piece.PieceType lastRemovedPieceType; // 上一个被吃的子
+    public static boolean isSelecting = false;
+    public static Piece selectedPiece = null;
+    public static ArrayList<Point2D> availablePositions = new ArrayList<>();
+    public static Piece.Type lastRemovedType;
+
+    public Chess() throws IOException {
+    }
 
     public static void main(String[] args) {
         View.window.setSize(960, 600);
         Game.setMaximumPlayer(2);
-        View.setName("Let's play the chess");
+//        View.setName("Let's play the chesS");
+        View.setName("\n");
         Game.setBoardSize(8, 8);
         Game.saver.checkSize(true); // 读档时检查存档棋盘大小
         Game.saver.setSlotNumber(5); // 存档数量
 
-//        AudioPlayer.playBgm("src/main/resources/aaa.mp3"); //播放bgm
-//        GameStage.instance().setBgm("src/main/resources/aaa.mp3"); // 在进入GameStage时播放bgm
+        AudioPlayer.playBgm("src/main/resources/bgm1.mp3");
+//        GameStage.instance().setBgm("src/main/resources/坂本龍一 - Merry Christmas Mr. Lawrence.mp3");
 
         Game.registerBoard(Board.class);
 
@@ -81,7 +86,7 @@ public class Chess {
                                     this.removedPiece = (Piece) Game.getBoard().movePiece(selectedPiece.getX(), selectedPiece.getY(), x, y);
                                     if (this.removedPiece != null) {
                                         // 如果吃了子，记录最近一个被吃的子的类型（判断被吃的是不是将或者帅）
-                                        lastRemovedPieceType = this.removedPiece.getName();
+                                        lastRemovedType = this.removedPiece.getName();
                                     }
                                     selectedPiece = null; // 清理全局变量
                                     availablePositions.clear();
@@ -128,13 +133,13 @@ public class Chess {
                 @Override
                 public ActionPerformType perform() {
                     if (!isSelecting) return ActionPerformType.FAIL; // 没选中或不是兵返回FAIL
-                    if (selectedPiece.getName() != Piece.PieceType.P) {
+                    if (selectedPiece.getName() != Piece.Type.P) {
                         selectedPiece = null; // 清理全局变量
                         availablePositions.clear();
                         return ActionPerformType.FAIL;
                     }
                     changedPiece = selectedPiece; // 记录改变的棋子，方便撤回
-                    selectedPiece.setName(Piece.PieceType.N); // 改变type
+                    selectedPiece.setName(Piece.Type.N); // 改变type
                     selectedPiece = null; // 清理全局变量
                     availablePositions.clear();
                     return ActionPerformType.SUCCESS;
@@ -142,7 +147,7 @@ public class Chess {
 
                 @Override
                 public void undo() {
-                    changedPiece.setName(Piece.PieceType.P); // 把记下来的棋子改回兵
+                    changedPiece.setName(Piece.Type.P); // 把记下来的棋子改回兵
                 }
             });
         });
@@ -152,7 +157,7 @@ public class Chess {
 
         // 胜利条件：刚才被吃的是将/帅，则吃子的玩家赢
         Game.setPlayerWinningJudge((player -> {
-            return lastRemovedPieceType == Piece.PieceType.K
+            return lastRemovedType == Piece.Type.K
                     && Game.getCurrentPlayerIndex() == player.getId();
         }));
 
@@ -238,7 +243,7 @@ public class Chess {
                 }
                 revalidate();
                 repaint();
-                if (grid.hasPiece()) { // 绘制棋子，这里直接写文字了。加图片建议用JLabel的Icon。
+                if (grid.hasPiece()) {
                     Piece piece = (Piece) grid.getOwnedPiece();
 //                    this.label.setText(piece.getName().name());
                     BufferedImage bufferedImage;
@@ -300,7 +305,7 @@ public class Chess {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    bufferedImage = bufferedImage.getSubimage(50,34,50,68);
+                    bufferedImage = bufferedImage.getSubimage(50,34,45,65);
 //                    bufferedImage.getScaledInstance(10,10,100);
                     this.label.setIcon(new ImageIcon(bufferedImage));
                     if (piece.getColor() == Color.WHITE)
@@ -308,7 +313,7 @@ public class Chess {
                     else
                         this.label.setForeground(java.awt.Color.BLACK);
                 } else {
-                    this.label.setText("");
+                    this.label.setIcon(new ImageIcon());
                 }
             }
         });
@@ -334,7 +339,7 @@ public class Chess {
             isSelecting = false;
             selectedPiece = null;
             availablePositions = new ArrayList<>();
-            lastRemovedPieceType = null;
+            lastRemovedType = null;
             Game.init();
         });
 
@@ -353,4 +358,26 @@ public class Chess {
 
         View.start();
     }
+
+//    static Image B,K,N,P,Q,R,b,k,n,p,q,r;
+//
+//    static {
+//        try {
+//            B = ImageIO.read(new File("src/main/resources/pieces/bishop-black.png"));
+//            K = ImageIO.read(new File("src/main/resources/pieces/king-black.png"));
+//            N = ImageIO.read(new File("src/main/resources/pieces/knight-black.png"));
+//            P = ImageIO.read(new File("src/main/resources/pieces/pawn-black.png"));
+//            Q = ImageIO.read(new File("src/main/resources/pieces/queen-black.png"));
+//            R = ImageIO.read(new File("src/main/resources/pieces/rook-black.png"));
+//            b = ImageIO.read(new File("src/main/resources/pieces/bishop-white.png"));
+//            k = ImageIO.read(new File("src/main/resources/pieces/king-white.png"));
+//            n = ImageIO.read(new File("src/main/resources/pieces/knight-white.png"));
+//            p = ImageIO.read(new File("src/main/resources/pieces/pawn-white.png"));
+//            q = ImageIO.read(new File("src/main/resources/pieces/queen-white.png"));
+//            r = ImageIO.read(new File("src/main/resources/pieces/rook-white.png"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 }
