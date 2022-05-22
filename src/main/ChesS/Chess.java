@@ -10,6 +10,7 @@ import frame.view.View;
 import frame.view.board.BoardView;
 import frame.view.board.GridPanelView;
 import frame.view.board.GridView;
+import frame.view.components.BackgroundImagePanel;
 import frame.view.sound.AudioPlayer;
 import frame.view.stage.GameStage;
 import frame.view.stage.MenuStage;
@@ -39,13 +40,6 @@ public class Chess {
 
     public Chess() throws IOException {}
 
-    public static void clear(){
-        isSelecting = false;
-        selectedPiece = null;
-        canMovePositions = new ArrayList<>();
-        lastRemovedType = null;
-    }
-
     private static void initialize(){
         View.setName("\n");
         View.window.setSize(950, 600);
@@ -55,6 +49,14 @@ public class Chess {
         Game.setMaximumPlayer(2);
     }
 
+    public static void clear(){
+        isSelecting = false;
+        selectedPiece = null;
+        canMovePositions = new ArrayList<>();
+        lastRemovedType = null;
+    }
+
+    //know where will be eaten by the other player
     public static ArrayList<Point2D> canBeEaten(ChessColor n){
         ArrayList<Point2D> result = new ArrayList<>();
         switch (n){
@@ -93,6 +95,7 @@ public class Chess {
     public static void main(String[] args) {
 
         initialize();
+
         MenuStage.instance().rank.setText("     Rank    ");
         MenuStage.instance().rank.setFont(new Font("INK Free",Font.PLAIN,20));
         MenuStage.instance().rank.setBackground(new java.awt.Color(60, 63, 65));
@@ -138,6 +141,7 @@ public class Chess {
 
         //set the bgm
         MusicPlayer bgm = new MusicPlayer("src/main/resources/eS=S - 8bit Faith.mp3");
+        bgm.start();
 
         //change the background
         try {
@@ -153,10 +157,7 @@ public class Chess {
             e.printStackTrace();
         }
 
-        bgm.start();
-
         //register board
-
         Game.registerBoard(Board.class);
 
         JButton resetGame = new JButton("Reset Game");
@@ -177,6 +178,31 @@ public class Chess {
             View.changeStage("LoadStage");
         });
 
+        MenuStage.instance().quit.addActionListener((e) -> {
+            System.exit(0);
+        });
+
+        JButton MusicOn = new JButton("Music On");
+        MusicOn.setForeground(new java.awt.Color(169, 183, 198));
+        MusicOn.setBackground(new java.awt.Color(60, 63, 65));
+        MusicOn.addActionListener((e) -> {
+            bgm.start();
+        });
+
+        JButton MusicOff = new JButton("Music Off");
+        MusicOff.setForeground(new java.awt.Color(169, 183, 198));
+        MusicOff.setBackground(new java.awt.Color(60, 63, 65));
+        MusicOn.addActionListener((e) -> {
+            MusicPlayer end = new MusicPlayer(null);
+            end.start();
+        });
+
+//        MenuStage.instance().setCustomDrawMethod(() -> {
+//            MenuStage music = MenuStage.instance();
+//            music.buttonPanel.add(MusicOn);
+//            music.buttonPanel.add(MusicOff);
+//        });
+
         GameStage.instance().setCustomDrawMethod(() -> {
             GameStage stage = GameStage.instance();
             stage.menuBar.add(resetGame);
@@ -188,6 +214,11 @@ public class Chess {
             stage.add("South", stage.scoreBoard);
             stage.add("North", stage.menuBar);
         });
+
+        //GUI End
+
+        /*--------------------------------------------------------------------------*/
+        //bottom logic
 
         //chess piece action
         Game.registerGridAction((x, y) -> true, (x, y, mouseButton) -> {
@@ -223,12 +254,10 @@ public class Chess {
                             isSelecting = true;
                             AudioPlayer.playSound("src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
                             return ActionPerformType.PENDING; // 执行结果为PENDING，玩家这一步对棋盘没有更改，需要之后的Action
-                            // 撤销或者FAIL时会把之前所有的PENDING都撤掉，详见文档
                         } else {
                             isSelecting = false;
-                            for (Point2D point : canMovePositions) { // 判断点击的格子是否能走
+                            for (Point2D point : canMovePositions) {
                                 if (point.x == x && point.y == y) {
-                                    // 获取被吃掉的棋子，存到Action对象里
                                     this.removedPiece = (Piece) Game.getBoard().movePiece(selectedPiece.getX(), selectedPiece.getY(), x, y);
                                     if (this.removedPiece != null) {
                                         lastRemovedType = this.removedPiece.getName();
@@ -250,53 +279,25 @@ public class Chess {
                     @Override
                     public void undo() {
                         Game.getBoard().movePiece(x, y, copyLastX, copyLastY);
-                        if (removedPiece != null) { // 如果这个Action吃了子，把被吃的子放回去
+                        if (removedPiece != null) {
                             Game.getBoard().getGrid(x, y).setOwnedPiece(removedPiece);
                         }
                     }
 
                     @Override
                     public void removePending() {
-                        // 撤销返回PENDING的Action的时候会调用。
-                        // 比如说，刚才高亮的时候记录了全局变量。
-                        // 如果是在选中时撤销，由于撤销PENDING的Action不会调用undo，所以需要在这里清理全局变量。
                         selectedPiece = null;
                         canMovePositions.clear();
                     }
 
                 };
+            }else {
+                return null;
             }
-            return null;
         });
 
-        //win judge
-        Game.setPlayerWinningJudge((player -> {
-            return lastRemovedType == Piece.Type.K
-                    && Game.getCurrentPlayerIndex() == player.getId();
-        }));
 
-        // 判断游戏结束条件。默认条件是任意一方胜利，但由于和棋规则，这里多判断了当前玩家无棋可走。
-        // 判断方式很暴力，遍历了棋盘，找到下一名玩家的所有棋子，判断棋子是不是全都动不了。
-        // 这里用的是getNextPlayer，因为游戏结束是在当前玩家回合结束，还没进入下一名玩家的回合时判断。
-        Game.setGameEndingJudge(() -> {
-            if (PlayerManager.isOnePlayerRemains()) return true; // 先判断是不是有人赢了或者投降
-            for (int i = 0; i < Game.getWidth(); i++) { // 遍历棋盘
-                for (int j = 0; j < Game.getHeight(); j++) {
-                    Grid grid = (Grid) Game.getBoard().getGrid(i, j);
-                    if (grid.hasPiece()) {
-                        Piece piece = (Piece) grid.getOwnedPiece(); // 如果格子上有子，并且和当前玩家颜色不一样：
-                        if (piece.getColor() == ChessColor.values()[Game.getNextPlayerIndex()]) {
-                            if (!piece.canMoveTo().isEmpty()) { // 判断是不是能走。如果能走则返回false，不平局。
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-            // 如果都不能走则平局。
-            return true;
-        });
-
+        //board display
         View.setGridViewPattern(() -> new GridPanelView() {
             boolean isHighLighted = false;
             boolean hasMouseEntered = false;
@@ -331,6 +332,7 @@ public class Chess {
                 });
             }
 
+            //redraw pieces
             @Override
             public void redraw(BaseGrid grid) {
                 boolean flag = true;
@@ -422,7 +424,38 @@ public class Chess {
                     this.label.setIcon(new ImageIcon());
                 }
             }
-            //redraw end
+            //redraw pieces end
+
+        });
+
+
+        //win judge
+        Game.setPlayerWinningJudge((player -> {
+            return lastRemovedType == Piece.Type.K
+                    && Game.getCurrentPlayerIndex() == player.getId();
+        }));
+
+        // 判断游戏结束条件。默认条件是任意一方胜利，但由于和棋规则，这里多判断了当前玩家无棋可走。
+        // 判断方式很暴力，遍历了棋盘，找到下一名玩家的所有棋子，判断棋子是不是全都动不了。
+        // 这里用的是getNextPlayer，因为游戏结束是在当前玩家回合结束，还没进入下一名玩家的回合时判断。
+        //withdraw judge
+        Game.setGameEndingJudge(() -> {
+            if (PlayerManager.isOnePlayerRemains()) return true; // 先判断是不是有人赢了或者投降
+            for (int i = 0; i < Game.getWidth(); i++) { // 遍历棋盘
+                for (int j = 0; j < Game.getHeight(); j++) {
+                    Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                    if (grid.hasPiece()) {
+                        Piece piece = (Piece) grid.getOwnedPiece(); // 如果格子上有子，并且和当前玩家颜色不一样：
+                        if (piece.getColor() == ChessColor.values()[Game.getNextPlayerIndex()]) {
+                            if (!piece.canMoveTo().isEmpty()) { // 判断是不是能走。如果能走则返回false，不平局。
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            // 如果都不能走则平局。
+            return true;
         });
 
         View.setPlayerWinView((player -> JOptionPane.showMessageDialog(GameStage.instance(), player.getName() + " Win!")));
@@ -438,7 +471,7 @@ public class Chess {
 
 //        BackgroundImagePanel sidePanel = new BackgroundImagePanel();
 //        JButton someButton = new JButton("Promotion");
-//        someButton.addActionListener((e) -> { // 手动写一个按钮，按下时调用Game.performAction，然后继承一个Action传进去
+//        someButton.addActionListener((e) -> { // 手动写一个按钮·1，按下时调用Game.performAction，然后继承一个Action传进去
 //            Game.performAction(new Action(true) {
 //                Piece changedPiece = null; // 记录被升变的棋子
 //                @Override
@@ -466,5 +499,6 @@ public class Chess {
 //        GameStage.instance().add("East", sidePanel); // GameStage的布局管理器是BorderPanel，可以在东西南北添加Panel。框架在南北提供了两个，这里是在东边添加。
 
         View.start();
+        //the dream begins
     }
 }
