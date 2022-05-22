@@ -22,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.Format;
 import java.util.ArrayList;
 
 public class Chess {
@@ -250,55 +249,55 @@ public class Chess {
                     String m = piece.getName().name() + piece.getColor();
                     String location = "";
                     ImageIcon x = new ImageIcon();
-                    switch (m){
-                        case "BBLACK":
+                    switch (m) {
+                        case "BBLACK" -> {
                             x = new ImageIcon("src/main/resources/pieces/BBLACK.png");
                             location = x.getDescription();
-                            break;
-                        case "BWHITE":
+                        }
+                        case "BWHITE" -> {
                             x = new ImageIcon("src/main/resources/pieces/BWHITE.png");
                             location = x.getDescription();
-                            break;
-                        case "KBLACK":
+                        }
+                        case "KBLACK" -> {
                             x = new ImageIcon("src/main/resources/pieces/KBLACK.png");
                             location = x.getDescription();
-                            break;
-                        case "KWHITE":
+                        }
+                        case "KWHITE" -> {
                             x = new ImageIcon("src/main/resources/pieces/KWHITE.png");
                             location = x.getDescription();
-                            break;
-                        case "NBLACK":
+                        }
+                        case "NBLACK" -> {
                             x = new ImageIcon("src/main/resources/pieces/NBLACK.png");
                             location = x.getDescription();
-                            break;
-                        case "NWHITE":
+                        }
+                        case "NWHITE" -> {
                             x = new ImageIcon("src/main/resources/pieces/NWHITE.png");
                             location = x.getDescription();
-                            break;
-                        case "PBLACK":
+                        }
+                        case "PBLACK" -> {
                             x = new ImageIcon("src/main/resources/pieces/PBLACK.png");
                             location = x.getDescription();
-                            break;
-                        case "PWHITE":
+                        }
+                        case "PWHITE" -> {
                             x = new ImageIcon("src/main/resources/pieces/PWHITE.png");
                             location = x.getDescription();
-                            break;
-                        case "QBLACK":
+                        }
+                        case "QBLACK" -> {
                             x = new ImageIcon("src/main/resources/pieces/QBLACK.png");
                             location = x.getDescription();
-                            break;
-                        case "QWHITE":
+                        }
+                        case "QWHITE" -> {
                             x = new ImageIcon("src/main/resources/pieces/QWHITE.png");
                             location = x.getDescription();
-                            break;
-                        case "RBLACK":
+                        }
+                        case "RBLACK" -> {
                             x = new ImageIcon("src/main/resources/pieces/RBLACK.png");
                             location = x.getDescription();
-                            break;
-                        case "RWHITE":
+                        }
+                        case "RWHITE" -> {
                             x = new ImageIcon("src/main/resources/pieces/RWHITE.png");
                             location = x.getDescription();
-                            break;
+                        }
                     }
                     try {
                         bufferedImage = ImageIO.read(new File(String.format("%s",location)));
@@ -358,26 +357,4 @@ public class Chess {
 
         View.start();
     }
-
-//    static Image B,K,N,P,Q,R,b,k,n,p,q,r;
-//
-//    static {
-//        try {
-//            B = ImageIO.read(new File("src/main/resources/pieces/bishop-black.png"));
-//            K = ImageIO.read(new File("src/main/resources/pieces/king-black.png"));
-//            N = ImageIO.read(new File("src/main/resources/pieces/knight-black.png"));
-//            P = ImageIO.read(new File("src/main/resources/pieces/pawn-black.png"));
-//            Q = ImageIO.read(new File("src/main/resources/pieces/queen-black.png"));
-//            R = ImageIO.read(new File("src/main/resources/pieces/rook-black.png"));
-//            b = ImageIO.read(new File("src/main/resources/pieces/bishop-white.png"));
-//            k = ImageIO.read(new File("src/main/resources/pieces/king-white.png"));
-//            n = ImageIO.read(new File("src/main/resources/pieces/knight-white.png"));
-//            p = ImageIO.read(new File("src/main/resources/pieces/pawn-white.png"));
-//            q = ImageIO.read(new File("src/main/resources/pieces/queen-white.png"));
-//            r = ImageIO.read(new File("src/main/resources/pieces/rook-white.png"));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 }
