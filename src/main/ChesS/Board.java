@@ -27,17 +27,17 @@ public class Board extends BaseBoard {
                 Piece.Type.R
         };
         for (int i = 0; i < 8; i++) {
-            grids[i][0].setOwnedPiece(new Piece(i, 0, Line[i], Color.WHITE));
+            grids[i][0].setOwnedPiece(new Piece(i, 0, Line[i], ChessColor.WHITE));
         }
         for (int i = 7; i >=0 ; i--) {
-            grids[i][7].setOwnedPiece(new Piece(i, 7, Line[i], Color.BLACK));
+            grids[i][7].setOwnedPiece(new Piece(i, 7, Line[i], ChessColor.BLACK));
         }
 
         for (int i = 0; i < 8; i ++) {
-            grids[i][1].setOwnedPiece(new Piece(i, 1, Piece.Type.P, Color.WHITE));
+            grids[i][1].setOwnedPiece(new Piece(i, 1, Piece.Type.P, ChessColor.WHITE));
         }
         for (int i = 0; i < 8; i ++) {
-            grids[i][6].setOwnedPiece(new Piece(i, 6, Piece.Type.P, Color.BLACK));
+            grids[i][6].setOwnedPiece(new Piece(i, 6, Piece.Type.P, ChessColor.BLACK));
         }
     }
 }
