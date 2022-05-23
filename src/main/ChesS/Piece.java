@@ -37,7 +37,7 @@ public class Piece extends BasePiece {
         this.name = name;
     }
 
-    private ChessColor checkPieceColor(int x, int y) {
+    public static ChessColor checkPieceColor(int x, int y) {
         BasePiece piece = Game.getBoard().getGrid(x, y).getOwnedPiece();
         if (piece == null) {
             return ChessColor.NULL;

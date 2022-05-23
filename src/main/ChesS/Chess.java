@@ -9,18 +9,16 @@ import frame.util.Point2D;
 import frame.view.View;
 import frame.view.board.BoardView;
 import frame.view.board.GridPanelView;
-import frame.view.board.GridView;
-import frame.view.components.BackgroundImagePanel;
 import frame.view.sound.AudioPlayer;
 import frame.view.stage.GameStage;
 import frame.view.stage.MenuStage;
 import frame.view.stage.RoomStage;
 import frame.view.stage.LoadStage;
+import frame.view.stage.RankingStage;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -36,7 +34,9 @@ public class Chess {
     public static boolean isSelecting = false;
     public static Piece selectedPiece = null;
     public static ArrayList<Point2D> canMovePositions = new ArrayList<>();
-    public static Piece.Type lastRemovedType;
+
+    public static Piece.Type LastEatenType;
+    public static Piece LastEatenPiece;
 
     public Chess() throws IOException {}
 
@@ -49,15 +49,16 @@ public class Chess {
         Game.setMaximumPlayer(2);
     }
 
+    //reset component
     public static void clear(){
         isSelecting = false;
         selectedPiece = null;
         canMovePositions = new ArrayList<>();
-        lastRemovedType = null;
+        LastEatenType = null;
     }
 
-    //know where will be eaten by the other player
-    public static ArrayList<Point2D> canBeEaten(ChessColor n){
+    //know which pieces will be eaten by the other player
+    public static ArrayList<Point2D> canBeEatenPieces(ChessColor n){
         ArrayList<Point2D> result = new ArrayList<>();
         switch (n){
             case WHITE:
@@ -72,6 +73,7 @@ public class Chess {
                             }
                         }
                     }
+                result.removeIf(p -> Piece.checkPieceColor(p.x, p.y) != ChessColor.WHITE);
                 break;
             case BLACK:
                 for (int i = 0; i < Game.getWidth(); i++) {
@@ -80,6 +82,43 @@ public class Chess {
                         if (grid.hasPiece()) {
                             Piece piece = (Piece) grid.getOwnedPiece();
                             if (piece.getColor() == ChessColor.WHITE) {
+                                result.addAll(piece.canMoveTo());
+                            }
+                        }
+                    }
+                }
+                result.removeIf(p -> Piece.checkPieceColor(p.x, p.y) != ChessColor.BLACK);
+                break;
+            case NULL:
+                break;
+        }
+        return result;
+    }
+
+    //know where can move to
+    public static ArrayList<Point2D> canMove(ChessColor n){
+        ArrayList<Point2D> result = new ArrayList<>();
+        switch (n){
+            case WHITE:
+                for (int i = 0; i < Game.getWidth(); i++) {
+                    for (int j = 0; j < Game.getHeight(); j++) {
+                        Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                        if (grid.hasPiece()) {
+                            Piece piece = (Piece) grid.getOwnedPiece();
+                            if (piece.getColor() == ChessColor.WHITE) {
+                                result.addAll(piece.canMoveTo());
+                            }
+                        }
+                    }
+                }
+                break;
+            case BLACK:
+                for (int i = 0; i < Game.getWidth(); i++) {
+                    for (int j = 0; j < Game.getHeight(); j++) {
+                        Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                        if (grid.hasPiece()) {
+                            Piece piece = (Piece) grid.getOwnedPiece();
+                            if (piece.getColor() == ChessColor.BLACK) {
                                 result.addAll(piece.canMoveTo());
                             }
                         }
@@ -94,6 +133,7 @@ public class Chess {
 
     public static void main(String[] args) {
 
+        //GUI Begin
         initialize();
 
         MenuStage.instance().rank.setText("     Rank    ");
@@ -134,6 +174,16 @@ public class Chess {
         RoomStage.instance().start.setFont(new Font("INK Free",Font.PLAIN,20));
         RoomStage.instance().start.setBackground(new java.awt.Color(169, 183, 198));
         RoomStage.instance().start.setForeground(new java.awt.Color(60, 63, 65));
+
+        RankingStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
+        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+
+        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+        RankingStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
+        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+        RankingStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
+        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+
 
         GameStage.instance().menuButton.setBackground(new java.awt.Color(248, 248, 248));
         GameStage.instance().undoButton.setBackground(new java.awt.Color(248, 248, 248));
@@ -217,7 +267,8 @@ public class Chess {
 
         //GUI End
 
-        /*--------------------------------------------------------------------------*/
+        /*------------------------------------------------------------------------------------------*/
+
         //bottom logic
 
         //chess piece action
@@ -260,7 +311,7 @@ public class Chess {
                                 if (point.x == x && point.y == y) {
                                     this.removedPiece = (Piece) Game.getBoard().movePiece(selectedPiece.getX(), selectedPiece.getY(), x, y);
                                     if (this.removedPiece != null) {
-                                        lastRemovedType = this.removedPiece.getName();
+                                        LastEatenType = this.removedPiece.getName();
                                     }
                                     selectedPiece = null;
                                     canMovePositions.clear();
@@ -346,7 +397,7 @@ public class Chess {
                     }
                 }
 
-                if (flag) { // 格子不在可以走的格子里面
+                if (flag) {
                     isHighLighted = false;
                     if (!hasMouseEntered) {
                         setOpaque(false);
@@ -430,36 +481,36 @@ public class Chess {
 
 
         //win judge
-        Game.setPlayerWinningJudge((player -> {
-            return lastRemovedType == Piece.Type.K
-                    && Game.getCurrentPlayerIndex() == player.getId();
-        }));
+        Game.setPlayerWinningJudge((player -> LastEatenType == Piece.Type.K
+                && Game.getCurrentPlayerIndex() == player.getId()));
 
-        // 判断游戏结束条件。默认条件是任意一方胜利，但由于和棋规则，这里多判断了当前玩家无棋可走。
-        // 判断方式很暴力，遍历了棋盘，找到下一名玩家的所有棋子，判断棋子是不是全都动不了。
-        // 这里用的是getNextPlayer，因为游戏结束是在当前玩家回合结束，还没进入下一名玩家的回合时判断。
         //withdraw judge
         Game.setGameEndingJudge(() -> {
-            if (PlayerManager.isOnePlayerRemains()) return true; // 先判断是不是有人赢了或者投降
-            for (int i = 0; i < Game.getWidth(); i++) { // 遍历棋盘
-                for (int j = 0; j < Game.getHeight(); j++) {
-                    Grid grid = (Grid) Game.getBoard().getGrid(i, j);
-                    if (grid.hasPiece()) {
-                        Piece piece = (Piece) grid.getOwnedPiece(); // 如果格子上有子，并且和当前玩家颜色不一样：
-                        if (piece.getColor() == ChessColor.values()[Game.getNextPlayerIndex()]) {
-                            if (!piece.canMoveTo().isEmpty()) { // 判断是不是能走。如果能走则返回false，不平局。
-                                return false;
-                            }
-                        }
-                    }
-                }
+            if (PlayerManager.isOnePlayerRemains()){
+                return true;
             }
-            // 如果都不能走则平局。
+            if(canMove(ChessColor.values()[Game.getNextPlayerIndex()]) != null){
+                return false;
+            }
+//            for (int i = 0; i < Game.getWidth(); i++) {
+//                for (int j = 0; j < Game.getHeight(); j++) {
+//                    Grid gridNow = (Grid) Game.getBoard().getGrid(i, j);
+//                    if (gridNow.hasPiece()) {
+//                        Piece pieceNow = (Piece) gridNow.getOwnedPiece();
+//                        if (pieceNow.getColor() == ChessColor.values()[Game.getNextPlayerIndex()]) {
+//                            if (!pieceNow.canMoveTo().isEmpty()) {
+//                                return false;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
             return true;
         });
 
         View.setPlayerWinView((player -> JOptionPane.showMessageDialog(GameStage.instance(), player.getName() + " Win!")));
         View.setPlayerLoseView((player -> JOptionPane.showMessageDialog(GameStage.instance(), player.getName() + " Surrender!")));
+
         // 设置游戏结束的信息。
         // 由于玩家胜利已经会弹窗了，所以要判断一下是不是平局。
         View.setGameEndView(withdraw -> {
