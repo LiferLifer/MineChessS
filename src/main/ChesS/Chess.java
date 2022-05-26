@@ -4,6 +4,7 @@ import frame.action.ActionPerformType;
 import frame.board.BaseGrid;
 import frame.event.BoardChangeEvent;
 import frame.event.EventCenter;
+import frame.player.AIPlayer;
 import frame.player.PlayerManager;
 import frame.util.Point2D;
 import frame.view.View;
@@ -25,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static java.awt.Image.SCALE_SMOOTH;
 
@@ -175,14 +177,17 @@ public class Chess {
         RoomStage.instance().start.setBackground(new java.awt.Color(169, 183, 198));
         RoomStage.instance().start.setForeground(new java.awt.Color(60, 63, 65));
 
-        RankingStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
-        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+        RankingStage.instance().title.setText("{ RANK }");
+        RankingStage.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
+        RankingStage.instance().title.setForeground(new java.awt.Color(169, 183, 198));
+        RankingStage.instance().back.setBackground(new java.awt.Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new java.awt.Color(60, 63, 65));
 
         RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
         RankingStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
         RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
-        RankingStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
-        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new java.awt.Color(60, 63, 65));
+        RankingStage.instance().back.setBackground(new java.awt.Color(169, 183, 198));
 
 
         GameStage.instance().menuButton.setBackground(new java.awt.Color(248, 248, 248));
@@ -492,31 +497,42 @@ public class Chess {
             if(canMove(ChessColor.values()[Game.getNextPlayerIndex()]) != null){
                 return false;
             }
-//            for (int i = 0; i < Game.getWidth(); i++) {
-//                for (int j = 0; j < Game.getHeight(); j++) {
-//                    Grid gridNow = (Grid) Game.getBoard().getGrid(i, j);
-//                    if (gridNow.hasPiece()) {
-//                        Piece pieceNow = (Piece) gridNow.getOwnedPiece();
-//                        if (pieceNow.getColor() == ChessColor.values()[Game.getNextPlayerIndex()]) {
-//                            if (!pieceNow.canMoveTo().isEmpty()) {
-//                                return false;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
             return true;
         });
 
-        View.setPlayerWinView((player -> JOptionPane.showMessageDialog(GameStage.instance(), player.getName() + " Win!")));
-        View.setPlayerLoseView((player -> JOptionPane.showMessageDialog(GameStage.instance(), player.getName() + " Surrender!")));
+        View.setPlayerWinView((player -> JOptionPane.showMessageDialog(GameStage.instance(), "Congratulations!"+player.getName() + " Win!")));
 
-        // 设置游戏结束的信息。
-        // 由于玩家胜利已经会弹窗了，所以要判断一下是不是平局。
         View.setGameEndView(withdraw -> {
             if (withdraw) {
                 JOptionPane.showMessageDialog(GameStage.instance(), "The Game Withdraw!");
             }
+        });
+
+        //AI Player
+        AIPlayer.addAIType("Easy", (id) -> {
+            return new AIPlayer(id, "Easy", 200) {
+                protected boolean calculateNextMove() {
+                    Random random = new Random();
+
+                    for(int i = 0; i < 100; ++i) {
+                        int x = Math.abs(random.nextInt()) % Game.getWidth();
+                        int y = Math.abs(random.nextInt()) % Game.getHeight();
+                        if (this.performGridAction(x, y, 1)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            };
+        });
+        AIPlayer.addAIType("Normal", (id) -> {
+            return new AIPlayer(id, "Normal", 200) {
+                protected boolean calculateNextMove() {
+                    this.surrender();
+                    return true;
+                }
+            };
         });
 
 
@@ -550,6 +566,11 @@ public class Chess {
 //        GameStage.instance().add("East", sidePanel); // GameStage的布局管理器是BorderPanel，可以在东西南北添加Panel。框架在南北提供了两个，这里是在东边添加。
 
         View.start();
+
+        for(int i=0;i<Game.saver.getSlotNumber();i++) {
+            LoadStage.instance().saveButtons[i].setBackground(new java.awt.Color(169, 183, 198));
+            LoadStage.instance().saveButtons[i].setForeground(new java.awt.Color(60, 63, 65));
+        }
         //the dream begins
     }
 }
