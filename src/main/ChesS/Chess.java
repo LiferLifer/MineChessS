@@ -47,16 +47,18 @@ public class Chess {
         View.window.setSize(950, 600);
         Game.setBoardSize(8, 8);
         Game.saver.checkSize(true);
-        Game.saver.setSlotNumber(5);
+        Game.saver.setSlotNumber(7);
         Game.setMaximumPlayer(2);
     }
 
-    //reset component
+    //reset component variable
     public static void clear(){
         isSelecting = false;
         selectedPiece = null;
         canMovePositions = new ArrayList<>();
+
         LastEatenType = null;
+        LastEatenPiece = null;
     }
 
     //know which pieces will be eaten by the other player
@@ -128,6 +130,7 @@ public class Chess {
                 }
                 break;
             case NULL:
+                result = null;
                 break;
         }
         return result;
@@ -223,7 +226,8 @@ public class Chess {
         });
 
         JLabel currentPlayerLabel = new JLabel();
-        EventCenter.subscribe(BoardChangeEvent.class, e -> currentPlayerLabel.setText((ChessColor.values()[Game.getCurrentPlayerIndex()].name())+"'s turn"));
+        EventCenter.subscribe(BoardChangeEvent.class, e ->
+                currentPlayerLabel.setText((ChessColor.values()[Game.getCurrentPlayerIndex()].name())+"'s turn"));
         currentPlayerLabel.setFont(new Font("INK Free",Font.BOLD,25));
 
         JButton loadButton = new JButton("Load Game");
@@ -297,7 +301,7 @@ public class Chess {
 
                     @Override
                     public ActionPerformType perform() {
-                        if (!isSelecting) {
+                        if (isSelecting == false) {
                             BaseGrid selectedGrid = Game.getBoard().getGrid(x, y);
                             if (!selectedGrid.hasPiece())
                                 return ActionPerformType.FAIL;
@@ -306,10 +310,10 @@ public class Chess {
                                 return ActionPerformType.FAIL;
                             }
                             canMovePositions = piece.canMoveTo();
-                            selectedPiece = piece; // 全局变量存被选中的棋子
+                            selectedPiece = piece;
                             isSelecting = true;
                             AudioPlayer.playSound("src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
-                            return ActionPerformType.PENDING; // 执行结果为PENDING，玩家这一步对棋盘没有更改，需要之后的Action
+                            return ActionPerformType.PENDING;
                         } else {
                             isSelecting = false;
                             for (Point2D point : canMovePositions) {
@@ -494,13 +498,16 @@ public class Chess {
             if (PlayerManager.isOnePlayerRemains()){
                 return true;
             }
-            if(canMove(ChessColor.values()[Game.getNextPlayerIndex()]) != null){
+            if (canMove(ChessColor.values()[Game.getNextPlayerIndex()]) != null
+                    && canMove(ChessColor.values()[Game.getNextPlayerIndex()]).size()!=0){
                 return false;
             }
             return true;
         });
 
-        View.setPlayerWinView((player -> JOptionPane.showMessageDialog(GameStage.instance(), "Congratulations!"+player.getName() + " Win!")));
+        //message
+        View.setPlayerWinView((player ->
+                JOptionPane.showMessageDialog(GameStage.instance(), "Congratulations! "+player.getName() + " Win!\n"+"Game end!")));
 
         View.setGameEndView(withdraw -> {
             if (withdraw) {
@@ -509,25 +516,27 @@ public class Chess {
         });
 
         //AI Player
-        AIPlayer.addAIType("Easy", (id) -> {
-            return new AIPlayer(id, "Easy", 200) {
+        AIPlayer.addAIType("AI-Easy", (id) -> {
+            return new AIPlayer(id, "AI-Easy", 777) {
                 protected boolean calculateNextMove() {
                     Random random = new Random();
-
-                    for(int i = 0; i < 100; ++i) {
+                    while(true){
                         int x = Math.abs(random.nextInt()) % Game.getWidth();
                         int y = Math.abs(random.nextInt()) % Game.getHeight();
                         if (this.performGridAction(x, y, 1)) {
-                            return true;
+                            if(canMovePositions.size()>0) {
+                                int n = random.nextInt(0, canMovePositions.size());
+                                if (this.performGridAction(canMovePositions.get(n).x, canMovePositions.get(n).y, 1)) {
+                                    return true;
+                                }
+                            }
                         }
                     }
-
-                    return false;
                 }
             };
         });
-        AIPlayer.addAIType("Normal", (id) -> {
-            return new AIPlayer(id, "Normal", 200) {
+        AIPlayer.addAIType("AI-Normal", (id) -> {
+            return new AIPlayer(id, "AI-Normal", 666) {
                 protected boolean calculateNextMove() {
                     this.surrender();
                     return true;
