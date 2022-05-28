@@ -32,6 +32,7 @@ public class Chess {
 
     public static boolean isSelecting = false;
     public static Piece selectedPiece = null;
+    public static Piece Pz = null;
     public static ArrayList<Point2D> canMovePositions = new ArrayList<>();
     public static ArrayList<Point2D> allCanMovePositions = new ArrayList<>();
 
@@ -264,7 +265,49 @@ public class Chess {
         BackgroundImagePanel leftPanel = new BackgroundImagePanel();
         BackgroundImagePanel rightPanel = new BackgroundImagePanel();
 
-        rightPanel.add(settings);
+//        rightPanel.add(settings);
+
+        JButton q = new JButton("level up to Queen");
+        JButton r = new JButton("level up to Rook");
+        JButton b = new JButton("level up to Bishop");
+        JButton n = new JButton("level up to Knight");
+        q.addActionListener((e) -> {
+            fourCases.forP(Pz,0);
+            q.setVisible(false);
+            r.setVisible(false);
+            b.setVisible(false);
+            n.setVisible(false);
+        });
+        r.addActionListener((e) -> {
+            fourCases.forP(Pz,1);
+            q.setVisible(false);
+            r.setVisible(false);
+            b.setVisible(false);
+            n.setVisible(false);
+        });
+        b.addActionListener((e) -> {
+            fourCases.forP(Pz,2);
+            q.setVisible(false);
+            r.setVisible(false);
+            b.setVisible(false);
+            n.setVisible(false);
+        });
+        n.addActionListener((e) -> {
+            fourCases.forP(Pz,3);
+            q.setVisible(false);
+            r.setVisible(false);
+            b.setVisible(false);
+            n.setVisible(false);
+        });
+
+        leftPanel.add(q);
+        leftPanel.add(r);
+        leftPanel.add(b);
+        leftPanel.add(n);
+        q.setVisible(false);
+        r.setVisible(false);
+        b.setVisible(false);
+        n.setVisible(false);
 
         GameStage.instance().add("East", rightPanel);
         GameStage.instance().add("West", leftPanel);
@@ -374,7 +417,13 @@ public class Chess {
                                     }
                                     AudioPlayer.playSound("src/main/resources/pman - Freesound.wav");
                                     //bottom change
-//                                    if()
+                                    if((selectedPiece.getName() == Piece.Type.P && selectedPiece.getY() == 7) || (selectedPiece.getName() == Piece.Type.P && selectedPiece.getY() == 0)){
+                                        Pz = selectedPiece;
+                                        q.setVisible(true);
+                                        r.setVisible(true);
+                                        b.setVisible(true);
+                                        n.setVisible(true);
+                                    }
                                     selectedPiece = null;
                                     canMovePositions.clear();
 
