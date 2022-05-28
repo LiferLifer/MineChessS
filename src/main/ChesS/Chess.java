@@ -374,7 +374,7 @@ public class Chess {
                                     }
                                     AudioPlayer.playSound("src/main/resources/pman - Freesound.wav");
                                     //bottom change
-                                    if()
+//                                    if()
                                     selectedPiece = null;
                                     canMovePositions.clear();
 
