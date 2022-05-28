@@ -11,11 +11,7 @@ import frame.view.View;
 import frame.view.board.BoardView;
 import frame.view.board.GridPanelView;
 import frame.view.sound.AudioPlayer;
-import frame.view.stage.GameStage;
-import frame.view.stage.MenuStage;
-import frame.view.stage.RoomStage;
-import frame.view.stage.LoadStage;
-import frame.view.stage.RankingStage;
+import frame.view.stage.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -143,59 +139,74 @@ public class Chess {
 
         MenuStage.instance().rank.setText("     Rank    ");
         MenuStage.instance().rank.setFont(new Font("INK Free",Font.PLAIN,20));
-        MenuStage.instance().rank.setBackground(new java.awt.Color(60, 63, 65));
+        MenuStage.instance().rank.setBackground(new Color(60, 63, 65));
         MenuStage.instance().newGame.setText("     New     ");
         MenuStage.instance().newGame.setFont(new Font("INK Free",Font.PLAIN,22));
-        MenuStage.instance().newGame.setBackground(new java.awt.Color(60, 63, 65));
+        MenuStage.instance().newGame.setBackground(new Color(60, 63, 65));
         MenuStage.instance().load.setText("     Load     ");
         MenuStage.instance().load.setFont(new Font("INK Free",Font.PLAIN,20));
         MenuStage.instance().quit.setText("     Quit     ");
         MenuStage.instance().quit.setFont(new Font("INK Free",Font.PLAIN,20));
-        MenuStage.instance().load.setBackground(new java.awt.Color(60, 63, 65));
-        MenuStage.instance().quit.setBackground(new java.awt.Color(60, 63, 65));
+        MenuStage.instance().load.setBackground(new Color(60, 63, 65));
+        MenuStage.instance().quit.setBackground(new Color(60, 63, 65));
+        MenuStage.instance().settings.setVisible(true);
+        MenuStage.instance().settings.setText("     Settings    ");
+        MenuStage.instance().settings.setFont(new Font("INK Free",Font.PLAIN,20));
+        MenuStage.instance().settings.setBackground(new java.awt.Color(60, 63, 65));
 
-        MenuStage.instance().quit.setForeground(new java.awt.Color(169, 183, 198));
-        MenuStage.instance().load.setForeground(new java.awt.Color(169, 183, 198));
-        MenuStage.instance().newGame.setForeground(new java.awt.Color(169, 183, 198));
-        MenuStage.instance().rank.setForeground(new java.awt.Color(169, 183, 198));
+        MenuStage.instance().quit.setForeground(new Color(169, 183, 198));
+        MenuStage.instance().load.setForeground(new Color(169, 183, 198));
+        MenuStage.instance().newGame.setForeground(new Color(169, 183, 198));
+        MenuStage.instance().rank.setForeground(new Color(169, 183, 198));
+        MenuStage.instance().settings.setForeground(new java.awt.Color(169, 183, 198));
+
+
+
+
+        SettingStage.instance().setRoomBG.setForeground(new Color(169, 183, 198));
+        SettingStage.instance().setLoadBG.setForeground(new Color(169, 183, 198));
+        SettingStage.instance().setPiecePicture.setForeground(new Color(169, 183, 198));
+        SettingStage.instance().setMenuBG.setForeground(new Color(169, 183, 198));
+        SettingStage.instance().setBGM.setForeground(new Color(169, 183, 198));
+        SettingStage.instance().setBoardBG.setForeground(new Color(169, 183, 198));
 
         RoomStage.instance().textHeight.setVisible(false);
         RoomStage.instance().textWidth.setVisible(false);
 
         LoadStage.instance().title.setText("{ LOAD }");
         LoadStage.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
-        LoadStage.instance().title.setForeground(new java.awt.Color(251, 251, 251));
+        LoadStage.instance().title.setForeground(new Color(251, 251, 251));
         LoadStage.instance().fileChooserButton.setText("Select Files");
-        LoadStage.instance().fileChooserButton.setBackground(new java.awt.Color(169, 183, 198));
-        LoadStage.instance().fileChooserButton.setForeground(new java.awt.Color(60, 63, 65));
+        LoadStage.instance().fileChooserButton.setBackground(new Color(169, 183, 198));
+        LoadStage.instance().fileChooserButton.setForeground(new Color(60, 63, 65));
         LoadStage.instance().back.setText("Back  Menu");
-        LoadStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
-        LoadStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
+        LoadStage.instance().back.setBackground(new Color(60, 63, 65));
+        LoadStage.instance().back.setForeground(new Color(169, 183, 198));
 
         RoomStage.instance().back.setText("Menu ");
         RoomStage.instance().back.setFont(new Font("INK Free",Font.PLAIN,20));
-        RoomStage.instance().back.setBackground(new java.awt.Color(169, 183, 198));
-        RoomStage.instance().back.setForeground(new java.awt.Color(60, 63, 65));
+        RoomStage.instance().back.setBackground(new Color(169, 183, 198));
+        RoomStage.instance().back.setForeground(new Color(60, 63, 65));
         RoomStage.instance().start.setFont(new Font("INK Free",Font.PLAIN,20));
-        RoomStage.instance().start.setBackground(new java.awt.Color(169, 183, 198));
-        RoomStage.instance().start.setForeground(new java.awt.Color(60, 63, 65));
+        RoomStage.instance().start.setBackground(new Color(169, 183, 198));
+        RoomStage.instance().start.setForeground(new Color(60, 63, 65));
 
         RankingStage.instance().title.setText("{ RANK }");
         RankingStage.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
-        RankingStage.instance().title.setForeground(new java.awt.Color(169, 183, 198));
-        RankingStage.instance().back.setBackground(new java.awt.Color(169, 183, 198));
-        RankingStage.instance().back.setForeground(new java.awt.Color(60, 63, 65));
+        RankingStage.instance().title.setForeground(new Color(169, 183, 198));
+        RankingStage.instance().back.setBackground(new Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new Color(60, 63, 65));
 
-        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
-        RankingStage.instance().back.setBackground(new java.awt.Color(60, 63, 65));
-        RankingStage.instance().back.setForeground(new java.awt.Color(169, 183, 198));
-        RankingStage.instance().back.setForeground(new java.awt.Color(60, 63, 65));
-        RankingStage.instance().back.setBackground(new java.awt.Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new Color(169, 183, 198));
+        RankingStage.instance().back.setBackground(new Color(60, 63, 65));
+        RankingStage.instance().back.setForeground(new Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new Color(60, 63, 65));
+        RankingStage.instance().back.setBackground(new Color(169, 183, 198));
 
 
-        GameStage.instance().menuButton.setBackground(new java.awt.Color(248, 248, 248));
-        GameStage.instance().undoButton.setBackground(new java.awt.Color(248, 248, 248));
-        GameStage.instance().saveButton.setBackground(new java.awt.Color(248, 248, 248));
+        GameStage.instance().menuButton.setBackground(new Color(248, 248, 248));
+        GameStage.instance().undoButton.setBackground(new Color(248, 248, 248));
+        GameStage.instance().saveButton.setBackground(new Color(248, 248, 248));
 
         //set the bgm
         MusicPlayer bgm = new MusicPlayer("src/main/resources/eS=S - 8bit Faith.mp3");
@@ -219,7 +230,7 @@ public class Chess {
         Game.registerBoard(Board.class);
 
         JButton resetGame = new JButton("Reset Game");
-        resetGame.setBackground(new java.awt.Color(248, 248, 248));;
+        resetGame.setBackground(new Color(248, 248, 248));
         resetGame.addActionListener((e) -> {
             Game.init();
             clear();
@@ -231,7 +242,7 @@ public class Chess {
         currentPlayerLabel.setFont(new Font("INK Free",Font.BOLD,25));
 
         JButton loadButton = new JButton("Load Game");
-        loadButton.setBackground(new java.awt.Color(248, 248, 248));
+        loadButton.setBackground(new Color(248, 248, 248));
         loadButton.addActionListener((e) -> {
             View.changeStage("MenuStage");
             View.changeStage("LoadStage");
@@ -242,15 +253,15 @@ public class Chess {
         });
 
         JButton MusicOn = new JButton("Music On");
-        MusicOn.setForeground(new java.awt.Color(169, 183, 198));
-        MusicOn.setBackground(new java.awt.Color(60, 63, 65));
+        MusicOn.setForeground(new Color(169, 183, 198));
+        MusicOn.setBackground(new Color(60, 63, 65));
         MusicOn.addActionListener((e) -> {
             bgm.start();
         });
 
         JButton MusicOff = new JButton("Music Off");
-        MusicOff.setForeground(new java.awt.Color(169, 183, 198));
-        MusicOff.setBackground(new java.awt.Color(60, 63, 65));
+        MusicOff.setForeground(new Color(169, 183, 198));
+        MusicOff.setBackground(new Color(60, 63, 65));
         MusicOn.addActionListener((e) -> {
             MusicPlayer end = new MusicPlayer(null);
             end.start();
@@ -301,7 +312,7 @@ public class Chess {
 
                     @Override
                     public ActionPerformType perform() {
-                        if (isSelecting == false) {
+                        if (!isSelecting) {
                             BaseGrid selectedGrid = Game.getBoard().getGrid(x, y);
                             if (!selectedGrid.hasPiece())
                                 return ActionPerformType.FAIL;
@@ -369,7 +380,7 @@ public class Chess {
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         super.mouseEntered(e);
-                        setBackground(new java.awt.Color(2, 158, 143));
+                        setBackground(new Color(2, 158, 143));
                         setOpaque(true);
 
                         revalidate();
@@ -383,7 +394,7 @@ public class Chess {
                         if (!isHighLighted) {
                             setOpaque(false);
                         } else {
-                            setBackground(new java.awt.Color(102, 192, 175));
+                            setBackground(new Color(102, 192, 175));
                         }
 
                         revalidate();
@@ -400,7 +411,7 @@ public class Chess {
                     if (point.x == grid.x && point.y == grid.y) {
                         flag = false;
                         isHighLighted = true;
-                        setBackground(new java.awt.Color(102, 192, 175));
+                        setBackground(new Color(102, 192, 175));
                         setOpaque(true);
                         break;
                     }
@@ -577,8 +588,8 @@ public class Chess {
         View.start();
 
         for(int i=0;i<Game.saver.getSlotNumber();i++) {
-            LoadStage.instance().saveButtons[i].setBackground(new java.awt.Color(169, 183, 198));
-            LoadStage.instance().saveButtons[i].setForeground(new java.awt.Color(60, 63, 65));
+            LoadStage.instance().saveButtons[i].setBackground(new Color(169, 183, 198));
+            LoadStage.instance().saveButtons[i].setForeground(new Color(60, 63, 65));
         }
         //the dream begins
     }
