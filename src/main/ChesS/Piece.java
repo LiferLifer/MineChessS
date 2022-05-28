@@ -45,6 +45,14 @@ public class Piece extends BasePiece {
         return ((Piece) piece).chessColor;
     }
 
+    public static Type checkPieceType(int x, int y) {
+        BasePiece piece = Game.getBoard().getGrid(x, y).getOwnedPiece();
+        if (piece == null) {
+            return null;
+        }
+        return ((Piece) piece).getName();
+    }
+
     //check if beyond boundary
     private boolean checkBoundary(int x, int y){
         return x >= 0 && x < 8 && y >= 0 && y < 8;
