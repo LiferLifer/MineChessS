@@ -34,10 +34,10 @@ public class Chess {
     public static Piece selectedPiece = null;
     public static Piece Pz = null;
     public static ArrayList<Point2D> canMovePositions = new ArrayList<>();
+    public static ArrayList<Point2D> allCanMovePositions = new ArrayList<>();
 
     public static Piece.Type LastEatenType;
     public static Piece LastEatenPiece;
-    public static boolean Jiang;
 
     public Chess() throws IOException {}
 
@@ -55,6 +55,7 @@ public class Chess {
         isSelecting = false;
         selectedPiece = null;
         canMovePositions = new ArrayList<>();
+        allCanMovePositions = new ArrayList<>();
 
 
         LastEatenType = null;
@@ -266,10 +267,10 @@ public class Chess {
 
 //        rightPanel.add(settings);
 
-        JButton q = new JButton("Q");
-        JButton r = new JButton("R");
-        JButton b = new JButton("B");
-        JButton n = new JButton("N");
+        JButton q = new JButton("level up to Queen");
+        JButton r = new JButton("level up to Rook");
+        JButton b = new JButton("level up to Bishop");
+        JButton n = new JButton("level up to Knight");
         q.addActionListener((e) -> {
             fourCases.forP(Pz,0);
             q.setVisible(false);
@@ -300,9 +301,9 @@ public class Chess {
         });
 
         leftPanel.add(q);
-        leftPanel.add("South",r);
-        leftPanel.add("South",b);
-        leftPanel.add("South",n);
+        leftPanel.add(r);
+        leftPanel.add(b);
+        leftPanel.add(n);
         q.setVisible(false);
         r.setVisible(false);
         b.setVisible(false);
@@ -425,17 +426,9 @@ public class Chess {
                                     }
                                     selectedPiece = null;
                                     canMovePositions.clear();
-                                    for (Point2D thePoint:canBeEatenPieces(ChessColor.values()[Game.getNextPlayerIndex()])) {
-                                        if(Piece.checkPieceType(thePoint.x,thePoint.y)== Piece.Type.K){
-                                            Jiang = true;
-                                            break;
-                                        }
-                                    }
-                                    if(Jiang){
-                                        AudioPlayer.playSound("src/main/resources/0705.将军.wav");
-                                        JOptionPane.showMessageDialog(GameStage.instance(), "Jiang Jun La!");
-                                        Jiang = false;
-                                    }
+
+
+
                                     return ActionPerformType.SUCCESS;
                                 }
                             }
@@ -651,7 +644,7 @@ public class Chess {
                 protected boolean calculateNextMove() {
                     ArrayList<Point2D> canEat = canBeEatenPieces(ChessColor.values()[Game.getNextPlayerIndex()]);
                     ArrayList<Point2D> pointCross = new ArrayList<>();
-                    ArrayList<Point2D> allCanMovePositions = canMove(ChessColor.values()[Game.getCurrentPlayerIndex()]);
+                    allCanMovePositions = canMove(ChessColor.values()[Game.getCurrentPlayerIndex()]);
                     ArrayList<Piece> myPieces = allPieces(ChessColor.values()[Game.getCurrentPlayerIndex()]);
                     while(true){
                         for(int i=0;i<allCanMovePositions.size();i++){

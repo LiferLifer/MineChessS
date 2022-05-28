@@ -32,7 +32,7 @@ public class Settings extends BaseStage {
     public BackgroundImagePanel dummyPanel = new BackgroundImagePanel();
 
     private Settings() {
-        super("SettingsStage");
+        super("SettingStage");
         this.setLayout(new BorderLayout());
         this.title.setFont(new Font("Arial", Font.PLAIN, 50));
         this.title.setHorizontalAlignment(0);
