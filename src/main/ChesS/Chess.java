@@ -10,6 +10,7 @@ import frame.util.Point2D;
 import frame.view.View;
 import frame.view.board.BoardView;
 import frame.view.board.GridPanelView;
+import frame.view.components.BackgroundImagePanel;
 import frame.view.sound.AudioPlayer;
 import frame.view.stage.*;
 
@@ -32,6 +33,7 @@ public class Chess {
     public static boolean isSelecting = false;
     public static Piece selectedPiece = null;
     public static ArrayList<Point2D> canMovePositions = new ArrayList<>();
+    public static ArrayList<Point2D> allCanMovePositions = new ArrayList<>();
 
     public static Piece.Type LastEatenType;
     public static Piece LastEatenPiece;
@@ -52,9 +54,28 @@ public class Chess {
         isSelecting = false;
         selectedPiece = null;
         canMovePositions = new ArrayList<>();
+        allCanMovePositions = new ArrayList<>();
+
 
         LastEatenType = null;
         LastEatenPiece = null;
+    }
+
+    //where are your pieces
+    public static ArrayList<Piece> allPieces(ChessColor n){
+        ArrayList<Piece> result = new ArrayList<>();
+        for (int i = 0; i < Game.getWidth(); i++) {
+            for (int j = 0; j < Game.getHeight(); j++) {
+                Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                if (grid.hasPiece()) {
+                    Piece piece = (Piece) grid.getOwnedPiece();
+                    if (piece.getColor() == n) {
+                        result.add(piece);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     //know which pieces will be eaten by the other player
@@ -149,7 +170,7 @@ public class Chess {
         MenuStage.instance().quit.setFont(new Font("INK Free",Font.PLAIN,20));
         MenuStage.instance().load.setBackground(new Color(60, 63, 65));
         MenuStage.instance().quit.setBackground(new Color(60, 63, 65));
-        MenuStage.instance().settings.setVisible(true);
+//        MenuStage.instance().settings.setVisible(true);
         MenuStage.instance().settings.setText("     Settings    ");
         MenuStage.instance().settings.setFont(new Font("INK Free",Font.PLAIN,20));
         MenuStage.instance().settings.setBackground(new java.awt.Color(60, 63, 65));
@@ -160,15 +181,12 @@ public class Chess {
         MenuStage.instance().rank.setForeground(new Color(169, 183, 198));
         MenuStage.instance().settings.setForeground(new java.awt.Color(169, 183, 198));
 
-
-
-
-        SettingStage.instance().setRoomBG.setForeground(new Color(169, 183, 198));
-        SettingStage.instance().setLoadBG.setForeground(new Color(169, 183, 198));
-        SettingStage.instance().setPiecePicture.setForeground(new Color(169, 183, 198));
-        SettingStage.instance().setMenuBG.setForeground(new Color(169, 183, 198));
-        SettingStage.instance().setBGM.setForeground(new Color(169, 183, 198));
-        SettingStage.instance().setBoardBG.setForeground(new Color(169, 183, 198));
+        Settings.instance().setRoomBG.setForeground(new Color(169, 183, 198));
+        Settings.instance().setLoadBG.setForeground(new Color(169, 183, 198));
+        Settings.instance().setPiecePicture.setForeground(new Color(169, 183, 198));
+        Settings.instance().setMenuBG.setForeground(new Color(169, 183, 198));
+        Settings.instance().setBGM.setForeground(new Color(169, 183, 198));
+        Settings.instance().setBoardBG.setForeground(new Color(169, 183, 198));
 
         RoomStage.instance().textHeight.setVisible(false);
         RoomStage.instance().textWidth.setVisible(false);
@@ -228,13 +246,28 @@ public class Chess {
 
         //register board
         Game.registerBoard(Board.class);
+        Settings.instance().setVisible(true);
+        View.addStage("Settings", Settings.instance());
 
         JButton resetGame = new JButton("Reset Game");
-        resetGame.setBackground(new Color(248, 248, 248));
+        resetGame.setBackground(new java.awt.Color(248, 248, 248));;
         resetGame.addActionListener((e) -> {
             Game.init();
             clear();
         });
+
+        JButton settings = new JButton("Settings");
+        settings.addActionListener((e) -> {
+            View.changeStage("Settings");
+        });
+
+        BackgroundImagePanel leftPanel = new BackgroundImagePanel();
+        BackgroundImagePanel rightPanel = new BackgroundImagePanel();
+
+        rightPanel.add(settings);
+
+        GameStage.instance().add("East", rightPanel);
+        GameStage.instance().add("West", leftPanel);
 
         JLabel currentPlayerLabel = new JLabel();
         EventCenter.subscribe(BoardChangeEvent.class, e ->
@@ -275,6 +308,7 @@ public class Chess {
 
         GameStage.instance().setCustomDrawMethod(() -> {
             GameStage stage = GameStage.instance();
+
             stage.menuBar.add(resetGame);
             stage.menuBar.add(stage.saveButton);
             stage.menuBar.add(stage.undoButton);
@@ -314,17 +348,22 @@ public class Chess {
                     public ActionPerformType perform() {
                         if (!isSelecting) {
                             BaseGrid selectedGrid = Game.getBoard().getGrid(x, y);
-                            if (!selectedGrid.hasPiece())
+                            if (!selectedGrid.hasPiece()){
                                 return ActionPerformType.FAIL;
-                            Piece piece = (Piece) selectedGrid.getOwnedPiece();
-                            if (piece.getColor() != ChessColor.values()[Game.getCurrentPlayerIndex()]) {
-                                return ActionPerformType.FAIL;
+                            }else{
+                                Piece piece = (Piece) selectedGrid.getOwnedPiece();
+                                if (piece.getColor() != ChessColor.values()[Game.getCurrentPlayerIndex()]) {
+                                    return ActionPerformType.FAIL;
+                                }else{
+                                    AudioPlayer.playSound("src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
+                                    canMovePositions = piece.canMoveTo();
+                                    selectedPiece = piece;
+                                    isSelecting = true;
+                                    return ActionPerformType.PENDING;
+                                }
                             }
-                            canMovePositions = piece.canMoveTo();
-                            selectedPiece = piece;
-                            isSelecting = true;
-                            AudioPlayer.playSound("src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
-                            return ActionPerformType.PENDING;
+
+
                         } else {
                             isSelecting = false;
                             for (Point2D point : canMovePositions) {
@@ -333,9 +372,14 @@ public class Chess {
                                     if (this.removedPiece != null) {
                                         LastEatenType = this.removedPiece.getName();
                                     }
+                                    AudioPlayer.playSound("src/main/resources/pman - Freesound.wav");
+                                    //bottom change
+                                    if()
                                     selectedPiece = null;
                                     canMovePositions.clear();
-                                    AudioPlayer.playSound("src/main/resources/pman - Freesound.wav");
+
+
+
                                     return ActionPerformType.SUCCESS;
                                 }
                             }
@@ -549,13 +593,57 @@ public class Chess {
         AIPlayer.addAIType("AI-Normal", (id) -> {
             return new AIPlayer(id, "AI-Normal", 666) {
                 protected boolean calculateNextMove() {
-                    this.surrender();
-                    return true;
+                    ArrayList<Point2D> canEat = canBeEatenPieces(ChessColor.values()[Game.getNextPlayerIndex()]);
+                    ArrayList<Point2D> pointCross = new ArrayList<>();
+                    allCanMovePositions = canMove(ChessColor.values()[Game.getCurrentPlayerIndex()]);
+                    ArrayList<Piece> myPieces = allPieces(ChessColor.values()[Game.getCurrentPlayerIndex()]);
+                    while(true){
+                        for(int i=0;i<allCanMovePositions.size();i++){
+                            for(int j=0;j<canEat.size();j++){
+                                if(allCanMovePositions.get(i).x == canEat.get(j).x && allCanMovePositions.get(i).y == canEat.get(j).y){
+                                    pointCross.add(allCanMovePositions.get(i));
+                                }
+                            }
+                        }
+                        canEat = new ArrayList<>();
+                        Random random = new Random();
+                        if(pointCross.size()!=0){
+                            for(int k=0;k<pointCross.size();k++) {
+                                for (int l = 0; l < myPieces.size(); l++) {
+                                    if (this.performGridAction(myPieces.get(l).getX(), myPieces.get(l).getY(), 1)) {
+                                        if (canMovePositions.contains(pointCross.get(k))) {
+                                            if (this.performGridAction(pointCross.get(k).x, pointCross.get(k).y, 1)) {
+                                                allCanMovePositions = new ArrayList<>();
+                                                pointCross = new ArrayList<>();
+                                                return true;
+                                            }
+                                        } else {
+                                            this.performGridAction(pointCross.get(k).x, pointCross.get(k).y, 1);
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            while(true){
+                                int x = Math.abs(random.nextInt()) % Game.getWidth();
+                                int y = Math.abs(random.nextInt()) % Game.getHeight();
+                                if (this.performGridAction(x, y, 1)) {
+                                    if(canMovePositions.size()>0) {
+                                        int n = random.nextInt(0, canMovePositions.size());
+                                        if (this.performGridAction(canMovePositions.get(n).x, canMovePositions.get(n).y, 1)) {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                 }
             };
         });
 
-
+//dixianshengbian
 //        BackgroundImagePanel sidePanel = new BackgroundImagePanel();
 //        JButton someButton = new JButton("Promotion");
 //        someButton.addActionListener((e) -> { // 手动写一个按钮·1，按下时调用Game.performAction，然后继承一个Action传进去
@@ -586,6 +674,8 @@ public class Chess {
 //        GameStage.instance().add("East", sidePanel); // GameStage的布局管理器是BorderPanel，可以在东西南北添加Panel。框架在南北提供了两个，这里是在东边添加。
 
         View.start();
+
+        View.addStage("Settings", Settings.instance());
 
         for(int i=0;i<Game.saver.getSlotNumber();i++) {
             LoadStage.instance().saveButtons[i].setBackground(new Color(169, 183, 198));

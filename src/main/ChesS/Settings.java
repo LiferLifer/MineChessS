@@ -18,8 +18,8 @@ import java.io.IOException;
 
 import static java.awt.Image.SCALE_SMOOTH;
 
-public class SettingStage extends BaseStage {
-    private static volatile SettingStage sInstance = null;
+public class Settings extends BaseStage {
+    private static volatile Settings sInstance = null;
     public JLabel title = new JLabel("Set");
     public JButton setMenuBG = new JButton("Change Menu Background");
     public JButton setRoomBG = new JButton("Change Room Background");
@@ -31,10 +31,10 @@ public class SettingStage extends BaseStage {
     public Box buttonPanel = new Box(1);
     public BackgroundImagePanel dummyPanel = new BackgroundImagePanel();
 
-    private SettingStage() {
+    private Settings() {
         super("SettingsStage");
         this.setLayout(new BorderLayout());
-        this.title.setFont(new Font("Arial", 0, 50));
+        this.title.setFont(new Font("Arial", Font.PLAIN, 50));
         this.title.setHorizontalAlignment(0);
         this.setMenuBG.setVisible(true);
         this.setPiecePicture.setVisible(true);
@@ -220,12 +220,12 @@ public class SettingStage extends BaseStage {
         this.repaint();
     }
 
-    public static SettingStage instance() {
+    public static Settings instance() {
         if (sInstance == null) {
             Class var0 = BaseStage.class;
             synchronized(BaseStage.class) {
                 if (sInstance == null) {
-                    sInstance = new SettingStage();
+                    sInstance = new Settings();
                 }
             }
         }
