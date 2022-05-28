@@ -171,8 +171,8 @@ public class Chess {
         MenuStage.instance().quit.setFont(new Font("INK Free",Font.PLAIN,20));
         MenuStage.instance().load.setBackground(new Color(60, 63, 65));
         MenuStage.instance().quit.setBackground(new Color(60, 63, 65));
-//        MenuStage.instance().settings.setVisible(true);
-        MenuStage.instance().settings.setText("     Settings    ");
+        MenuStage.instance().settings.setVisible(true);
+        MenuStage.instance().settings.setText("     Setting    ");
         MenuStage.instance().settings.setFont(new Font("INK Free",Font.PLAIN,20));
         MenuStage.instance().settings.setBackground(new java.awt.Color(60, 63, 65));
 
@@ -188,6 +188,15 @@ public class Chess {
         Settings.instance().setMenuBG.setForeground(new Color(169, 183, 198));
         Settings.instance().setBGM.setForeground(new Color(169, 183, 198));
         Settings.instance().setBoardBG.setForeground(new Color(169, 183, 198));
+        Settings.instance().back.setForeground(new Color(169, 183, 198));
+
+        Settings.instance().setBGM.setBackground(new java.awt.Color(60, 63, 65));
+        Settings.instance().setBoardBG.setBackground(new java.awt.Color(60, 63, 65));
+        Settings.instance().setMenuBG.setBackground(new java.awt.Color(60, 63, 65));
+        Settings.instance().setPiecePicture.setBackground(new java.awt.Color(60, 63, 65));
+        Settings.instance().setLoadBG.setBackground(new java.awt.Color(60, 63, 65));
+        Settings.instance().setRoomBG.setBackground(new java.awt.Color(60, 63, 65));
+        Settings.instance().back.setBackground(new java.awt.Color(60, 63, 65));
 
         RoomStage.instance().textHeight.setVisible(false);
         RoomStage.instance().textWidth.setVisible(false);
@@ -248,7 +257,7 @@ public class Chess {
         //register board
         Game.registerBoard(Board.class);
         Settings.instance().setVisible(true);
-        View.addStage("Settings", Settings.instance());
+        View.addStage("SettingStage", Settings.instance());
 
         JButton resetGame = new JButton("Reset Game");
         resetGame.setBackground(new java.awt.Color(248, 248, 248));;
@@ -259,7 +268,7 @@ public class Chess {
 
         JButton settings = new JButton("Settings");
         settings.addActionListener((e) -> {
-            View.changeStage("Settings");
+            View.changeStage("SettingStage");
         });
 
         BackgroundImagePanel leftPanel = new BackgroundImagePanel();
@@ -724,7 +733,7 @@ public class Chess {
 
         View.start();
 
-        View.addStage("Settings", Settings.instance());
+        View.addStage("SettingStage", Settings.instance());
 
         for(int i=0;i<Game.saver.getSlotNumber();i++) {
             LoadStage.instance().saveButtons[i].setBackground(new Color(169, 183, 198));

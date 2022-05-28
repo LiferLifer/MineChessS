@@ -46,7 +46,7 @@ public class Settings extends BaseStage {
 
         this.setMenuBG.addActionListener((e) -> {
             try {
-                Image menuBackground = ImageIO.read(new File("src/main/resources/menu.png"));
+                Image menuBackground = ImageIO.read(new File("src/main/resources/background.png"));
                 MenuStage.instance().setBackgroundImage(menuBackground);
             } catch (IOException exception){
                 exception.printStackTrace();
@@ -118,51 +118,51 @@ public class Settings extends BaseStage {
                       ImageIcon x;
                       switch (m) {
                           case "BBLACK" -> {
-                              x = new ImageIcon("src/main/resources/pieces/BBLACK.png");
+                              x = new ImageIcon("src/main/resources/pieces2/BBLACK.png");
                               location = x.getDescription();
                           }
                           case "BWHITE" -> {
-                              x = new ImageIcon("src/main/resources/pieces/BWHITE.png");
+                              x = new ImageIcon("src/main/resources/pieces2/BWHITE.png");
                               location = x.getDescription();
                           }
                           case "KBLACK" -> {
-                              x = new ImageIcon("src/main/resources/pieces/KBLACK.png");
+                              x = new ImageIcon("src/main/resources/pieces2/KBLACK.png");
                               location = x.getDescription();
                           }
                           case "KWHITE" -> {
-                              x = new ImageIcon("src/main/resources/pieces/KWHITE.png");
+                              x = new ImageIcon("src/main/resources/pieces2/KWHITE.png");
                               location = x.getDescription();
                           }
                           case "NBLACK" -> {
-                              x = new ImageIcon("src/main/resources/pieces/NBLACK.png");
+                              x = new ImageIcon("src/main/resources/pieces2/NBLACK.png");
                               location = x.getDescription();
                           }
                           case "NWHITE" -> {
-                              x = new ImageIcon("src/main/resources/pieces/NWHITE.png");
+                              x = new ImageIcon("src/main/resources/pieces2/NWHITE.png");
                               location = x.getDescription();
                           }
                           case "PBLACK" -> {
-                              x = new ImageIcon("src/main/resources/pieces/PBLACK.png");
+                              x = new ImageIcon("src/main/resources/pieces2/PBLACK.png");
                               location = x.getDescription();
                           }
                           case "PWHITE" -> {
-                              x = new ImageIcon("src/main/resources/pieces/PWHITE.png");
+                              x = new ImageIcon("src/main/resources/pieces2/PWHITE.png");
                               location = x.getDescription();
                           }
                           case "QBLACK" -> {
-                              x = new ImageIcon("src/main/resources/pieces/QBLACK.png");
+                              x = new ImageIcon("src/main/resources/pieces2/QBLACK.png");
                               location = x.getDescription();
                           }
                           case "QWHITE" -> {
-                              x = new ImageIcon("src/main/resources/pieces/QWHITE.png");
+                              x = new ImageIcon("src/main/resources/pieces2/QWHITE.png");
                               location = x.getDescription();
                           }
                           case "RBLACK" -> {
-                              x = new ImageIcon("src/main/resources/pieces/RBLACK.png");
+                              x = new ImageIcon("src/main/resources/pieces2/RBLACK.png");
                               location = x.getDescription();
                           }
                           case "RWHITE" -> {
-                              x = new ImageIcon("src/main/resources/pieces/RWHITE.png");
+                              x = new ImageIcon("src/main/resources/pieces2/RWHITE.png");
                               location = x.getDescription();
                           }
                       }
