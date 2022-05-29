@@ -20,7 +20,7 @@ import static java.awt.Image.SCALE_SMOOTH;
 
 public class Settings extends BaseStage {
     private static volatile Settings sInstance = null;
-    public JLabel title = new JLabel("Set");
+    public JLabel title = new JLabel("Settings");
     public JButton setMenuBG = new JButton("Change Menu Background");
     public JButton setRoomBG = new JButton("Change Room Background");
     public JButton setLoadBG = new JButton("Change Load Background");
