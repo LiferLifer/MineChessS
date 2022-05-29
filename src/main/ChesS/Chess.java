@@ -248,7 +248,7 @@ public class Chess {
             Image chessBackground = ImageIO.read(new File("src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
             Image menuBackground = ImageIO.read(new File("src/main/resources/menu.png"));
             Image roomBackground = ImageIO.read(new File("src/main/resources/room.png"));
-            Image rankBG = ImageIO.read(new File("src/main/resources/29-5-2022_11247_images7.alphacoders.com.jpeg"));
+            Image rankBG = ImageIO.read(new File("src/main/resources/29-5-2022_11247_images7.alphacoders.com.png"));
             Image loadBackground = ImageIO.read(new File("src/main/resources/game.png"));
             View.setBoardViewPattern(() -> new BoardView(chessBackground) {});
             MenuStage.instance().setBackgroundImage(menuBackground);
