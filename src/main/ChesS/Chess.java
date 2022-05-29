@@ -37,10 +37,10 @@ public class Chess {
     public static Piece selectedPiece = null;
     public static Piece Pz = null;
     public static ArrayList<Point2D> canMovePositions = new ArrayList<>();
-    public static ArrayList<Point2D> allCanMovePositions = new ArrayList<>();
 
     public static Piece.Type LastEatenType;
     public static Piece LastEatenPiece;
+    public static boolean Jiang;
 
     public Chess() throws IOException {}
 
@@ -58,8 +58,6 @@ public class Chess {
         isSelecting = false;
         selectedPiece = null;
         canMovePositions = new ArrayList<>();
-        allCanMovePositions = new ArrayList<>();
-
 
         LastEatenType = null;
         LastEatenPiece = null;
@@ -156,6 +154,47 @@ public class Chess {
         }
         return result;
     }
+
+    public static ArrayList<Point2D> canMoveP(ChessColor n){
+        ArrayList<Point2D> result = new ArrayList<>();
+        switch (n){
+            case WHITE:
+                for (int i = 0; i < Game.getWidth(); i++) {
+                    for (int j = 0; j < Game.getHeight(); j++) {
+                        Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                        if (grid.hasPiece()) {
+                            Piece piece = (Piece) grid.getOwnedPiece();
+                            if (piece.getColor() == ChessColor.WHITE && piece.getName() == Piece.Type.P) {
+                                result.add(new Point2D(piece.getX()-1, piece.getY()+1 ));
+                                result.add(new Point2D(piece.getX()+1, piece.getY()+1 ));
+                            }
+                        }
+                    }
+                }
+                break;
+            case BLACK:
+                for (int i = 0; i < Game.getWidth(); i++) {
+                    for (int j = 0; j < Game.getHeight(); j++) {
+                        Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                        if (grid.hasPiece()) {
+                            Piece piece = (Piece) grid.getOwnedPiece();
+                            if (piece.getColor() == ChessColor.BLACK && piece.getName() == Piece.Type.P) {
+                                result.add(new Point2D(piece.getX()-1, piece.getY()-1 ));
+                                result.add(new Point2D(piece.getX()+1, piece.getY()-1 ));
+                            }
+                        }
+                    }
+                }
+                break;
+            case NULL:
+                result = null;
+                break;
+        }
+        if(result.size()!=0) result.removeIf(p -> p.x < 0 || p.x >= 8 || p.y < 0 || p.y >= 8);
+        return result;
+    }
+
+
 
     public static void main(String[] args) {
 
@@ -291,11 +330,10 @@ public class Chess {
 
 //        rightPanel.add(settings);
 
-        JButton q = new JButton("level up to Queen");
-        JButton r = new JButton("level up to Rook");
-        JButton b = new JButton("level up to Bishop");
-        JButton n = new JButton("level up to Knight");
-
+        JButton q = new JButton("Q");
+        JButton r = new JButton("R");
+        JButton b = new JButton("B");
+        JButton n = new JButton("N");
 
         leftPanel.add(q);
         leftPanel.add(r);
@@ -411,6 +449,11 @@ public class Chess {
                                     canMovePositions = piece.canMoveTo();
                                     selectedPiece = piece;
                                     isSelecting = true;
+
+                                    if(selectedPiece.getName() == Piece.Type.K){
+                                        canMovePositions.removeIf(p -> canMove(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p) || canMoveP(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p));
+                                    }
+
                                     return ActionPerformType.PENDING;
                                 }
                             }
@@ -468,6 +511,19 @@ public class Chess {
                                     }
                                     selectedPiece = null;
                                     canMovePositions.clear();
+
+                                    for (Point2D thePoint:canBeEatenPieces(ChessColor.values()[Game.getNextPlayerIndex()])) {
+                                        if(Piece.checkPieceType(thePoint.x,thePoint.y)== Piece.Type.K){
+                                            Jiang = true;
+                                            break;
+                                        }
+                                    }
+                                    if(Jiang){
+                                        AudioPlayer.playSound("src/main/resources/0705.将军.wav");
+                                        JOptionPane.showMessageDialog(GameStage.instance(), "Jiang Jun La!");
+                                        Jiang = false;
+                                    }
+
                                     return ActionPerformType.SUCCESS;
                                 }
                             }
@@ -707,7 +763,7 @@ public class Chess {
                 protected boolean calculateNextMove() {
                     ArrayList<Point2D> canEat = canBeEatenPieces(ChessColor.values()[Game.getNextPlayerIndex()]);
                     ArrayList<Point2D> pointCross = new ArrayList<>();
-                    allCanMovePositions = canMove(ChessColor.values()[Game.getCurrentPlayerIndex()]);
+                    ArrayList<Point2D> allCanMovePositions = canMove(ChessColor.values()[Game.getCurrentPlayerIndex()]);
                     ArrayList<Piece> myPieces = allPieces(ChessColor.values()[Game.getCurrentPlayerIndex()]);
                     while(true){
                         for(int i=0;i<allCanMovePositions.size();i++){
@@ -793,6 +849,12 @@ public class Chess {
             LoadStage.instance().saveButtons[i].setBackground(new Color(169, 183, 198));
             LoadStage.instance().saveButtons[i].setForeground(new Color(60, 63, 65));
         }
+
+        JLabel currentPlayerLabel2 = new JLabel();
+        EventCenter.subscribe(BoardChangeEvent.class, e ->
+                currentPlayerLabel2.setText((ChessColor.values()[Game.getCurrentPlayerIndex()].name())+"'s turn"));
+        currentPlayerLabel2.setFont(new Font("INK Free",Font.BOLD,25));
+
         //the dream begins
     }
 }
