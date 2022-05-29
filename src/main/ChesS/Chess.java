@@ -185,15 +185,19 @@ public class Chess {
         MenuStage.instance().rank.setForeground(new Color(169, 183, 198));
         MenuStage.instance().settings.setForeground(new java.awt.Color(169, 183, 198));
 
+
+        Settings.instance().title.setText("{ Set }");
+        Settings.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
+        Settings.instance().title.setForeground(new Color(169, 183, 198));
         Settings.instance().setRoomBG.setForeground(new Color(169, 183, 198));
         Settings.instance().setLoadBG.setForeground(new Color(169, 183, 198));
         Settings.instance().setPiecePicture.setForeground(new Color(169, 183, 198));
         Settings.instance().setMenuBG.setForeground(new Color(169, 183, 198));
-        Settings.instance().setBGM.setForeground(new Color(169, 183, 198));
+        Settings.instance().setGameBG.setForeground(new Color(169, 183, 198));
         Settings.instance().setBoardBG.setForeground(new Color(169, 183, 198));
         Settings.instance().back.setForeground(new Color(169, 183, 198));
 
-        Settings.instance().setBGM.setBackground(new java.awt.Color(60, 63, 65));
+        Settings.instance().setGameBG.setBackground(new java.awt.Color(60, 63, 65));
         Settings.instance().setBoardBG.setBackground(new java.awt.Color(60, 63, 65));
         Settings.instance().setMenuBG.setBackground(new java.awt.Color(60, 63, 65));
         Settings.instance().setPiecePicture.setBackground(new java.awt.Color(60, 63, 65));
@@ -208,11 +212,12 @@ public class Chess {
         LoadStage.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
         LoadStage.instance().title.setForeground(new Color(251, 251, 251));
         LoadStage.instance().fileChooserButton.setText("Select Files");
-        LoadStage.instance().fileChooserButton.setBackground(new Color(169, 183, 198));
-        LoadStage.instance().fileChooserButton.setForeground(new Color(60, 63, 65));
+        LoadStage.instance().fileChooserButton.setBackground(new Color(60, 63, 65));
+        LoadStage.instance().fileChooserButton.setForeground(new Color(169, 183, 198));
         LoadStage.instance().back.setText("Back  Menu");
         LoadStage.instance().back.setBackground(new Color(60, 63, 65));
         LoadStage.instance().back.setForeground(new Color(169, 183, 198));
+
 
         RoomStage.instance().back.setText("Menu ");
         RoomStage.instance().back.setFont(new Font("INK Free",Font.PLAIN,20));
@@ -224,7 +229,7 @@ public class Chess {
 
         RankingStage.instance().title.setText("{ RANK }");
         RankingStage.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
-        RankingStage.instance().title.setForeground(new Color(169, 183, 198));
+        RankingStage.instance().title.setForeground(new Color(17, 17, 19));
         RankingStage.instance().back.setBackground(new Color(169, 183, 198));
         RankingStage.instance().back.setForeground(new Color(60, 63, 65));
 
@@ -235,6 +240,7 @@ public class Chess {
         RankingStage.instance().back.setBackground(new Color(169, 183, 198));
 
 
+//        GameStage.instance().add("Set",MenuStage.instance().settings);
         GameStage.instance().menuButton.setBackground(new Color(248, 248, 248));
         GameStage.instance().undoButton.setBackground(new Color(248, 248, 248));
         GameStage.instance().saveButton.setBackground(new Color(248, 248, 248));
@@ -248,8 +254,9 @@ public class Chess {
             Image chessBackground = ImageIO.read(new File("src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
             Image menuBackground = ImageIO.read(new File("src/main/resources/menu.png"));
             Image roomBackground = ImageIO.read(new File("src/main/resources/room.png"));
-            Image rankBG = ImageIO.read(new File("src/main/resources/29-5-2022_11247_images7.alphacoders.com.png"));
+            Image rankBG = ImageIO.read(new File("src/main/resources/game.png"));
             Image loadBackground = ImageIO.read(new File("src/main/resources/game.png"));
+            Image setBG = ImageIO.read(new File("src/main/resources/game.png"));
             Image gameBG = ImageIO.read(new File("src/main/resources/game.png"));
             View.setBoardViewPattern(() -> new BoardView(chessBackground) {});
             MenuStage.instance().setBackgroundImage(menuBackground);
@@ -257,6 +264,7 @@ public class Chess {
             LoadStage.instance().setBackgroundImage(loadBackground);
             RankingStage.instance().setBackgroundImage(rankBG);
             GameStage.instance().setBackgroundImage(gameBG);
+            Settings.instance().setBackgroundImage(setBG);
         } catch (IOException e) {
             e.printStackTrace();
         }
