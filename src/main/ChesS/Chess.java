@@ -16,6 +16,7 @@ import frame.view.stage.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -354,6 +355,17 @@ public class Chess {
             end.start();
         });
 
+        RankingStage.instance().rankingTable.setOpaque(false);
+        RankingStage.instance().rankingPanel.setOpaque(false);
+        RankingStage.instance().rankingPanel.getViewport().setOpaque(false);
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setOpaque(false);
+        RankingStage.instance().rankingTable.setDefaultRenderer(Object.class,renderer);
+        Dimension viewSize = new Dimension();
+        viewSize.setSize(RankingStage.instance().rankingTable.getSize());
+//        RankingStage.instance().rankingTable.setPreferredSize(viewSize);
+        RankingStage.instance().rankingTable.setPreferredScrollableViewportSize(viewSize);
+
 //        MenuStage.instance().setCustomDrawMethod(() -> {
 //            MenuStage music = MenuStage.instance();
 //            music.buttonPanel.add(MusicOn);
@@ -372,6 +384,7 @@ public class Chess {
             stage.add("South", stage.scoreBoard);
             stage.add("North", stage.menuBar);
         });
+
 
         //GUI End
 
