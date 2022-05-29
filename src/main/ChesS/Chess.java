@@ -513,6 +513,7 @@ public class Chess {
                         int w = that.getWidth() == 0 ? 60 : that.getWidth();
                         int h = that.getHeight() == 0 ? 60 : that.getHeight();
                         that.label.setIcon(new ImageIcon(bufferedImage.getScaledInstance(w, h, SCALE_SMOOTH)));
+                        EventCenter.publish(new BoardChangeEvent(e));
                     }
                 });
                 //highlight
