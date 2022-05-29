@@ -18,6 +18,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -223,14 +225,14 @@ public class Chess {
         RankingStage.instance().title.setText("{ RANK }");
         RankingStage.instance().title.setFont(new Font("INK Free",Font.BOLD,70));
         RankingStage.instance().title.setForeground(new Color(169, 183, 198));
-//        RankingStage.instance().back.setBackground(new Color(169, 183, 198));
-//        RankingStage.instance().back.setForeground(new Color(60, 63, 65));
+        RankingStage.instance().back.setBackground(new Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new Color(60, 63, 65));
 
-//        RankingStage.instance().back.setForeground(new Color(169, 183, 198));
-//        RankingStage.instance().back.setBackground(new Color(60, 63, 65));
-//        RankingStage.instance().back.setForeground(new Color(169, 183, 198));
-//        RankingStage.instance().back.setForeground(new Color(60, 63, 65));
-//        RankingStage.instance().back.setBackground(new Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new Color(169, 183, 198));
+        RankingStage.instance().back.setBackground(new Color(60, 63, 65));
+        RankingStage.instance().back.setForeground(new Color(169, 183, 198));
+        RankingStage.instance().back.setForeground(new Color(60, 63, 65));
+        RankingStage.instance().back.setBackground(new Color(169, 183, 198));
 
 
         GameStage.instance().menuButton.setBackground(new Color(248, 248, 248));
@@ -283,34 +285,7 @@ public class Chess {
         JButton r = new JButton("level up to Rook");
         JButton b = new JButton("level up to Bishop");
         JButton n = new JButton("level up to Knight");
-        q.addActionListener((e) -> {
-            fourCases.forP(Pz,0);
-            q.setVisible(false);
-            r.setVisible(false);
-            b.setVisible(false);
-            n.setVisible(false);
-        });
-        r.addActionListener((e) -> {
-            fourCases.forP(Pz,1);
-            q.setVisible(false);
-            r.setVisible(false);
-            b.setVisible(false);
-            n.setVisible(false);
-        });
-        b.addActionListener((e) -> {
-            fourCases.forP(Pz,2);
-            q.setVisible(false);
-            r.setVisible(false);
-            b.setVisible(false);
-            n.setVisible(false);
-        });
-        n.addActionListener((e) -> {
-            fourCases.forP(Pz,3);
-            q.setVisible(false);
-            r.setVisible(false);
-            b.setVisible(false);
-            n.setVisible(false);
-        });
+
 
         leftPanel.add(q);
         leftPanel.add(r);
@@ -447,12 +422,42 @@ public class Chess {
                                         r.setVisible(true);
                                         b.setVisible(true);
                                         n.setVisible(true);
+                                        q.addActionListener((e) -> {
+                                            fourCases.forP(Pz,0);
+                                            q.setVisible(false);
+                                            r.setVisible(false);
+                                            b.setVisible(false);
+                                            n.setVisible(false);
+                                            EventCenter.publish(new BoardChangeEvent(e));
+                                        });
+                                        r.addActionListener((e) -> {
+                                            fourCases.forP(Pz,1);
+                                            q.setVisible(false);
+                                            r.setVisible(false);
+                                            b.setVisible(false);
+                                            n.setVisible(false);
+                                            EventCenter.publish(new BoardChangeEvent(e));
+                                        });
+                                        b.addActionListener((e) -> {
+                                            fourCases.forP(Pz,2);
+                                            q.setVisible(false);
+                                            r.setVisible(false);
+                                            b.setVisible(false);
+                                            n.setVisible(false);
+                                            EventCenter.publish(new BoardChangeEvent(e));
+                                        });
+                                        n.addActionListener((e) -> {
+                                            fourCases.forP(Pz,3);
+                                            q.setVisible(false);
+                                            r.setVisible(false);
+                                            b.setVisible(false);
+                                            n.setVisible(false);
+                                            EventCenter.publish(new BoardChangeEvent(e));
+                                        });
+
                                     }
                                     selectedPiece = null;
                                     canMovePositions.clear();
-
-
-
                                     return ActionPerformType.SUCCESS;
                                 }
                             }
@@ -490,8 +495,26 @@ public class Chess {
             boolean isHighLighted = false;
             boolean hasMouseEntered = false;
 
+
+            BufferedImage bufferedImage;
+            GridPanelView that = this;
+
             @Override
             public void init() {
+
+
+                this.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentResized(ComponentEvent e) {
+                        super.componentResized(e);
+                        if (bufferedImage == null){
+                            return;
+                        }
+                        int w = that.getWidth() == 0 ? 60 : that.getWidth();
+                        int h = that.getHeight() == 0 ? 60 : that.getHeight();
+                        that.label.setIcon(new ImageIcon(bufferedImage.getScaledInstance(w, h, SCALE_SMOOTH)));
+                    }
+                });
                 //highlight
                 addMouseListener(new MouseAdapter() {
                     @Override
@@ -546,7 +569,6 @@ public class Chess {
 
                 if (grid.hasPiece()) {
                     Piece piece = (Piece) grid.getOwnedPiece();
-                    BufferedImage bufferedImage;
                     String m = piece.getName().name() + piece.getColor();
                     String location = "";
                     ImageIcon x;
@@ -599,15 +621,21 @@ public class Chess {
                             x = new ImageIcon("src/main/resources/pieces/RWHITE.png");
                             location = x.getDescription();
                         }
+                        default -> {
+                            x = new ImageIcon();
+                        }
                     }
                     try {
-                        bufferedImage = ImageIO.read(new File(String.format("%s",location)));
+                        bufferedImage = ImageIO.read(new File(String.format("%s", location)));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-//                    bufferedImage = bufferedImage.getSubimage(12,12,65,65);
-//                    bufferedImage.getScaledInstance(6,6,SCALE_SMOOTH);
-                    this.label.setIcon(new ImageIcon(bufferedImage.getScaledInstance(60,60,SCALE_SMOOTH)));
+                    int w = that.getWidth() == 0 ? 60 : that.getWidth();
+                    int h = that.getHeight() == 0 ? 60 : that.getHeight();
+                    that.label.setIcon(new ImageIcon(bufferedImage.getScaledInstance(w, h, SCALE_SMOOTH)));
+
+
+//                    this.label.setIcon(x);
                 } else {
                     this.label.setIcon(new ImageIcon());
                 }
