@@ -250,11 +250,13 @@ public class Chess {
             Image roomBackground = ImageIO.read(new File("src/main/resources/room.png"));
             Image rankBG = ImageIO.read(new File("src/main/resources/29-5-2022_11247_images7.alphacoders.com.png"));
             Image loadBackground = ImageIO.read(new File("src/main/resources/game.png"));
+            Image gameBG = ImageIO.read(new File("src/main/resources/game.png"));
             View.setBoardViewPattern(() -> new BoardView(chessBackground) {});
             MenuStage.instance().setBackgroundImage(menuBackground);
             RoomStage.instance().setBackgroundImage(roomBackground);
             LoadStage.instance().setBackgroundImage(loadBackground);
             RankingStage.instance().setBackgroundImage(rankBG);
+            GameStage.instance().setBackgroundImage(gameBG);
         } catch (IOException e) {
             e.printStackTrace();
         }
