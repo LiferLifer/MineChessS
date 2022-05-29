@@ -246,18 +246,18 @@ public class Chess {
         GameStage.instance().saveButton.setBackground(new Color(248, 248, 248));
 
         //set the bgm
-        MusicPlayer bgm = new MusicPlayer("src/main/resources/eS=S - 8bit Faith.mp3");
+        MusicPlayer bgm = new MusicPlayer("C:/MineChessS/src/main/resources/eS=S - 8bit Faith.mp3");
         bgm.start();
 
         //change the background
         try {
-            Image chessBackground = ImageIO.read(new File("src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
-            Image menuBackground = ImageIO.read(new File("src/main/resources/menu.png"));
-            Image roomBackground = ImageIO.read(new File("src/main/resources/room.png"));
-            Image rankBG = ImageIO.read(new File("src/main/resources/game.png"));
-            Image loadBackground = ImageIO.read(new File("src/main/resources/game.png"));
-            Image setBG = ImageIO.read(new File("src/main/resources/game.png"));
-            Image gameBG = ImageIO.read(new File("src/main/resources/game.png"));
+            Image chessBackground = ImageIO.read(new File("C:/MineChessS/src/main/resources/Snipaste_2022-05-22_14-17-21.png"));
+            Image menuBackground = ImageIO.read(new File("C:/MineChessS/src/main/resources/menu.png"));
+            Image roomBackground = ImageIO.read(new File("C:/MineChessS/src/main/resources/room.png"));
+            Image rankBG = ImageIO.read(new File("C:/MineChessS/src/main/resources/game.png"));
+            Image loadBackground = ImageIO.read(new File("C:/MineChessS/src/main/resources/game.png"));
+            Image setBG = ImageIO.read(new File("C:/MineChessS/src/main/resources/game.png"));
+            Image gameBG = ImageIO.read(new File("C:/MineChessS/src/main/resources/game.png"));
             View.setBoardViewPattern(() -> new BoardView(chessBackground) {});
             MenuStage.instance().setBackgroundImage(menuBackground);
             RoomStage.instance().setBackgroundImage(roomBackground);
@@ -407,7 +407,7 @@ public class Chess {
                                 if (piece.getColor() != ChessColor.values()[Game.getCurrentPlayerIndex()]) {
                                     return ActionPerformType.FAIL;
                                 }else{
-                                    AudioPlayer.playSound("src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
+                                    AudioPlayer.playSound("C:/MineChessS/src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
                                     canMovePositions = piece.canMoveTo();
                                     selectedPiece = piece;
                                     isSelecting = true;
@@ -424,7 +424,7 @@ public class Chess {
                                     if (this.removedPiece != null) {
                                         LastEatenType = this.removedPiece.getName();
                                     }
-                                    AudioPlayer.playSound("src/main/resources/pman - Freesound.wav");
+                                    AudioPlayer.playSound("C:/MineChessS/src/main/resources/pman - Freesound.wav");
                                     //bottom change
                                     if((selectedPiece.getName() == Piece.Type.P && selectedPiece.getY() == 7) || (selectedPiece.getName() == Piece.Type.P && selectedPiece.getY() == 0)){
                                         Pz = selectedPiece;
@@ -585,51 +585,51 @@ public class Chess {
                     ImageIcon x;
                     switch (m) {
                         case "BBLACK" -> {
-                            x = new ImageIcon("src/main/resources/pieces/BBLACK.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/BBLACK.png");
                             location = x.getDescription();
                         }
                         case "BWHITE" -> {
-                            x = new ImageIcon("src/main/resources/pieces/BWHITE.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/BWHITE.png");
                             location = x.getDescription();
                         }
                         case "KBLACK" -> {
-                            x = new ImageIcon("src/main/resources/pieces/KBLACK.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/KBLACK.png");
                             location = x.getDescription();
                         }
                         case "KWHITE" -> {
-                            x = new ImageIcon("src/main/resources/pieces/KWHITE.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/KWHITE.png");
                             location = x.getDescription();
                         }
                         case "NBLACK" -> {
-                            x = new ImageIcon("src/main/resources/pieces/NBLACK.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/NBLACK.png");
                             location = x.getDescription();
                         }
                         case "NWHITE" -> {
-                            x = new ImageIcon("src/main/resources/pieces/NWHITE.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/NWHITE.png");
                             location = x.getDescription();
                         }
                         case "PBLACK" -> {
-                            x = new ImageIcon("src/main/resources/pieces/PBLACK.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/PBLACK.png");
                             location = x.getDescription();
                         }
                         case "PWHITE" -> {
-                            x = new ImageIcon("src/main/resources/pieces/PWHITE.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/PWHITE.png");
                             location = x.getDescription();
                         }
                         case "QBLACK" -> {
-                            x = new ImageIcon("src/main/resources/pieces/QBLACK.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/QBLACK.png");
                             location = x.getDescription();
                         }
                         case "QWHITE" -> {
-                            x = new ImageIcon("src/main/resources/pieces/QWHITE.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/QWHITE.png");
                             location = x.getDescription();
                         }
                         case "RBLACK" -> {
-                            x = new ImageIcon("src/main/resources/pieces/RBLACK.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/RBLACK.png");
                             location = x.getDescription();
                         }
                         case "RWHITE" -> {
-                            x = new ImageIcon("src/main/resources/pieces/RWHITE.png");
+                            x = new ImageIcon("C:/MineChessS/src/main/resources/pieces/RWHITE.png");
                             location = x.getDescription();
                         }
                         default -> {

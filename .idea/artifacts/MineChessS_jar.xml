@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact name="MineChessS:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MineChessS_jar</output-path>
+    <root id="root">
+      <element id="archive" name="MineChessS.jar">
+        <element id="module-output" name="MineChessS" />
+      </element>
+      <element id="file-copy" path="$PROJECT_DIR$/2DBoardGameFrame-0.2.3-Alpha.jar" />
+      <element id="file-copy" path="$PROJECT_DIR$/jlayer-1.0.1.jar" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
+    </root>
+  </artifact>
+</component>

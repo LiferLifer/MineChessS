@@ -41,8 +41,8 @@ public class Settings extends BaseStage {
         this.setLayout(new BorderLayout());
         this.title.setFont(new Font("Arial", Font.PLAIN, 50));
         this.title.setHorizontalAlignment(0);
-        this.setMenuBG.setVisible(true);
-        this.setPiecePicture.setVisible(true);
+        this.setMenuBG.setVisible(false);
+        this.setPiecePicture.setVisible(false);
         this.setLoadBG.setVisible(true);
         this.setRoomBG.setVisible(true);
         this.setGameBG.setVisible(true);
@@ -51,7 +51,7 @@ public class Settings extends BaseStage {
 
         this.setMenuBG.addActionListener((e) -> {
             try {
-                Image menuBackground = ImageIO.read(new File("src/main/resources/29-5-2022_1153_images8.alphacoders.com.jpeg"));
+                Image menuBackground = ImageIO.read(new File("C:/MineChessS/src/main/resources/29-5-2022_1153_images8.alphacoders.com.jpeg"));
                 MenuStage.instance().setBackgroundImage(menuBackground);
             } catch (IOException exception){
                 exception.printStackTrace();
@@ -142,51 +142,51 @@ public class Settings extends BaseStage {
                         ImageIcon x;
                         switch (m) {
                             case "BBLACK" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/BBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/BBLACK.png");
                                 location = x.getDescription();
                             }
                             case "BWHITE" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/BWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/BWHITE.png");
                                 location = x.getDescription();
                             }
                             case "KBLACK" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/KBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/KBLACK.png");
                                 location = x.getDescription();
                             }
                             case "KWHITE" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/KWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/KWHITE.png");
                                 location = x.getDescription();
                             }
                             case "NBLACK" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/NBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/NBLACK.png");
                                 location = x.getDescription();
                             }
                             case "NWHITE" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/NWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/NWHITE.png");
                                 location = x.getDescription();
                             }
                             case "PBLACK" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/PBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/PBLACK.png");
                                 location = x.getDescription();
                             }
                             case "PWHITE" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/PWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/PWHITE.png");
                                 location = x.getDescription();
                             }
                             case "QBLACK" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/QBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/QBLACK.png");
                                 location = x.getDescription();
                             }
                             case "QWHITE" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/QWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/QWHITE.png");
                                 location = x.getDescription();
                             }
                             case "RBLACK" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/RBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/RBLACK.png");
                                 location = x.getDescription();
                             }
                             case "RWHITE" -> {
-                                x = new ImageIcon("src/main/resources/pieces3/RWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/RWHITE.png");
                                 location = x.getDescription();
                             }
                             default -> {
@@ -214,7 +214,7 @@ public class Settings extends BaseStage {
         });
         this.setBoardBG.addActionListener((e) -> {
             try {
-                Image chessBackground = ImageIO.read(new File("src/main/resources/img.png"));
+                Image chessBackground = ImageIO.read(new File("C:/MineChessS/src/main/resources/img.png"));
                 View.setBoardViewPattern(() -> new BoardView(chessBackground) {});
             } catch (IOException exception){
                 exception.printStackTrace();
@@ -222,7 +222,7 @@ public class Settings extends BaseStage {
         });
         this.setGameBG.addActionListener((e) -> {
             try {
-                Image menuBackground = ImageIO.read(new File("src/main/resources/29-5-2022_105949_images8.alphacoders.com.jpeg"));
+                Image menuBackground = ImageIO.read(new File("C:/MineChessS/src/main/resources/29-5-2022_105949_images8.alphacoders.com.jpeg"));
                 GameStage.instance().setBackgroundImage(menuBackground);
             } catch (IOException exception){
                 exception.printStackTrace();
