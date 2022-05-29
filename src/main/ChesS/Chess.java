@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.Random;
 
 import static java.awt.Image.SCALE_SMOOTH;
@@ -287,6 +288,7 @@ public class Chess {
             r.setVisible(false);
             b.setVisible(false);
             n.setVisible(false);
+            EventCenter.publish(new BoardChangeEvent(e));
         });
         r.addActionListener((e) -> {
             fourCases.forP(Pz,1);
@@ -294,6 +296,7 @@ public class Chess {
             r.setVisible(false);
             b.setVisible(false);
             n.setVisible(false);
+            EventCenter.publish(new BoardChangeEvent(e));
         });
         b.addActionListener((e) -> {
             fourCases.forP(Pz,2);
@@ -301,6 +304,7 @@ public class Chess {
             r.setVisible(false);
             b.setVisible(false);
             n.setVisible(false);
+            EventCenter.publish(new BoardChangeEvent(e));
         });
         n.addActionListener((e) -> {
             fourCases.forP(Pz,3);
@@ -308,6 +312,7 @@ public class Chess {
             r.setVisible(false);
             b.setVisible(false);
             n.setVisible(false);
+            EventCenter.publish(new BoardChangeEvent(e));
         });
 
         leftPanel.add(q);
