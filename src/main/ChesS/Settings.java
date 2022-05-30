@@ -43,8 +43,8 @@ public class Settings extends BaseStage {
         this.title.setHorizontalAlignment(0);
         this.setMenuBG.setVisible(true);
         this.setPiecePicture.setVisible(true);
-        this.setLoadBG.setVisible(false);
-        this.setRoomBG.setVisible(false);
+        this.setLoadBG.setVisible(true);
+        this.setRoomBG.setVisible(true);
         this.setGameBG.setVisible(true);
         this.setBoardBG.setVisible(true);
         this.back.setVisible(true);
@@ -237,8 +237,8 @@ public class Settings extends BaseStage {
             this.buttonPanel.add(Box.createVerticalStrut(10));
             this.buttonPanel.add(this.setMenuBG);
             this.buttonPanel.add(Box.createVerticalStrut(10));
-//            this.buttonPanel.add(this.setLoadBG);
-//            this.buttonPanel.add(Box.createVerticalStrut(10));
+            this.buttonPanel.add(this.setLoadBG);
+            this.buttonPanel.add(Box.createVerticalStrut(10));
             this.buttonPanel.add(this.setRoomBG);
             this.buttonPanel.add(Box.createVerticalStrut(10));
             this.buttonPanel.add(this.setBoardBG);

@@ -487,7 +487,7 @@ public class Chess {
                                     selectedPiece = piece;
                                     isSelecting = true;
 
-                                    if(selectedPiece.getName() == Piece.Type.K){
+                                    if(Piece.checkPieceType(piece.getX(),piece.getY()) == Piece.Type.K){
                                         canMovePositions.removeIf(p -> canMove(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p) || canMoveP(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p));
 //                                        canMovePositions.addAll(p -> cantMoveP(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p));
                                     }
@@ -769,7 +769,7 @@ public class Chess {
 
         //message
         View.setPlayerWinView((player ->
-                JOptionPane.showMessageDialog(GameStage.instance(), "Congratulations! "+player.getName() + " Win!\n"+"Game end!")));
+                JOptionPane.showMessageDialog(GameStage.instance(), "Congratulations! "+player.getName() + " Win!\n"+"  --Game end--")));
 
         View.setGameEndView(withdraw -> {
             if (withdraw) {
@@ -804,7 +804,7 @@ public class Chess {
                     ArrayList<Point2D> pointCross = new ArrayList<>();
                     ArrayList<Point2D> allCanMovePositions = canMove(ChessColor.values()[Game.getCurrentPlayerIndex()]);
                     ArrayList<Piece> myPieces = allPieces(ChessColor.values()[Game.getCurrentPlayerIndex()]);
-                    while(true){
+
                         for(int i=0;i<allCanMovePositions.size();i++){
                             for(int j=0;j<canEat.size();j++){
                                 if(allCanMovePositions.get(i).x == canEat.get(j).x && allCanMovePositions.get(i).y == canEat.get(j).y){
@@ -812,24 +812,49 @@ public class Chess {
                                 }
                             }
                         }
+
                         canEat = new ArrayList<>();
                         Random random = new Random();
+                    int betterX = 0;
+                    int betterY = 0;
+
                         if(pointCross.size()!=0){
-                            for(int k=0;k<pointCross.size();k++) {
-                                for (int l = 0; l < myPieces.size(); l++) {
-                                    if (this.performGridAction(myPieces.get(l).getX(), myPieces.get(l).getY(), 1)) {
-                                        if (canMovePositions.contains(pointCross.get(k))) {
-                                            if (this.performGridAction(pointCross.get(k).x, pointCross.get(k).y, 1)) {
-                                                allCanMovePositions = new ArrayList<>();
-                                                pointCross = new ArrayList<>();
-                                                return true;
-                                            }
-                                        } else {
-                                            this.performGridAction(pointCross.get(k).x, pointCross.get(k).y, 1);
+
+                            ArrayList<Piece> betterPiece = new ArrayList<>();
+                            for (Piece piece : myPieces) {
+                                for (Point2D point : pointCross) {
+                                    for (Point2D pointTo : piece.canMoveTo()) {
+                                        if (pointTo.x == point.x && pointTo.y == point.y) {
+                                            betterPiece.add(piece);
+                                            betterX = point.x;
+                                            betterY = point.y;
                                         }
                                     }
                                 }
                             }
+
+                            if(betterPiece.size()!=0){
+                                this.performGridAction(betterPiece.get(0).getX(), betterPiece.get(0).getY(), 1);
+                                this.performGridAction(betterX, betterY, 1);
+                                return true;
+                            }
+
+
+//                            for(int k=0;k<pointCross.size();k++) {
+//                                for (int l = 0; l < myPieces.size(); l++) {
+//                                    if (this.performGridAction(myPieces.get(l).getX(), myPieces.get(l).getY(), 1)) {
+//                                        if (canMovePositions.contains(pointCross.get(k))) {
+//                                            if (this.performGridAction(pointCross.get(k).x, pointCross.get(k).y, 1)) {
+//                                                return true;
+//                                            }
+//                                        } else {
+//                                            this.performGridAction(pointCross.get(k).x, pointCross.get(k).y, 1);
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            return false;
+
                         }else{
                             while(true){
                                 int x = Math.abs(random.nextInt()) % Game.getWidth();
@@ -844,41 +869,10 @@ public class Chess {
                                 }
                             }
                         }
-
-                    }
+                    return false;
                 }
             };
         });
-
-//dixianshengbian
-//        BackgroundImagePanel sidePanel = new BackgroundImagePanel();
-//        JButton someButton = new JButton("Promotion");
-//        someButton.addActionListener((e) -> { // 手动写一个按钮·1，按下时调用Game.performAction，然后继承一个Action传进去
-//            Game.performAction(new Action(true) {
-//                Piece changedPiece = null; // 记录被升变的棋子
-//                @Override
-//                public ActionPerformType perform() {
-//                    if (!isSelecting) return ActionPerformType.FAIL; // 没选中或不是兵返回FAIL
-//                    if (selectedPiece.getName() != Piece.Type.P) {
-//                        selectedPiece = null; // 清理全局变量
-//                        availablePositions.clear();
-//                        return ActionPerformType.FAIL;
-//                    }
-//                    changedPiece = selectedPiece; // 记录改变的棋子，方便撤回
-//                    selectedPiece.setName(Piece.Type.N); // 改变type
-//                    selectedPiece = null; // 清理全局变量
-//                    availablePositions.clear();
-//                    return ActionPerformType.SUCCESS;
-//                }
-//
-//                @Override
-//                public void undo() {
-//                    changedPiece.setName(Piece.Type.P); // 把记下来的棋子改回兵
-//                }
-//            });
-//        });
-//        sidePanel.add(someButton);
-//        GameStage.instance().add("East", sidePanel); // GameStage的布局管理器是BorderPanel，可以在东西南北添加Panel。框架在南北提供了两个，这里是在东边添加。
 
         View.start();
 
