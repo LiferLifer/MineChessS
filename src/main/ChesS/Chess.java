@@ -194,6 +194,43 @@ public class Chess {
         return result;
     }
 
+    public static ArrayList<Point2D> cantMoveP(ChessColor n){
+        ArrayList<Point2D> result = new ArrayList<>();
+        switch (n){
+            case WHITE:
+                for (int i = 0; i < Game.getWidth(); i++) {
+                    for (int j = 0; j < Game.getHeight(); j++) {
+                        Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                        if (grid.hasPiece()) {
+                            Piece piece = (Piece) grid.getOwnedPiece();
+                            if (piece.getColor() == ChessColor.WHITE && piece.getName() == Piece.Type.P) {
+                                result.add(new Point2D(piece.getX(), piece.getY()+1 ));
+                            }
+                        }
+                    }
+                }
+                break;
+            case BLACK:
+                for (int i = 0; i < Game.getWidth(); i++) {
+                    for (int j = 0; j < Game.getHeight(); j++) {
+                        Grid grid = (Grid) Game.getBoard().getGrid(i, j);
+                        if (grid.hasPiece()) {
+                            Piece piece = (Piece) grid.getOwnedPiece();
+                            if (piece.getColor() == ChessColor.BLACK && piece.getName() == Piece.Type.P) {
+                                result.add(new Point2D(piece.getX(), piece.getY()-1 ));
+                            }
+                        }
+                    }
+                }
+                break;
+            case NULL:
+                result = null;
+                break;
+        }
+        if(result.size()!=0) result.removeIf(p -> p.x < 0 || p.x >= 8 || p.y < 0 || p.y >= 8);
+        return result;
+    }
+
 
 
     public static void main(String[] args) {
@@ -452,6 +489,7 @@ public class Chess {
 
                                     if(selectedPiece.getName() == Piece.Type.K){
                                         canMovePositions.removeIf(p -> canMove(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p) || canMoveP(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p));
+//                                        canMovePositions.addAll(p -> cantMoveP(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p));
                                     }
 
                                     return ActionPerformType.PENDING;
@@ -468,6 +506,7 @@ public class Chess {
                                         LastEatenType = this.removedPiece.getName();
                                     }
                                     AudioPlayer.playSound("C:/MineChessS/src/main/resources/pman - Freesound.wav");
+
                                     //bottom change
                                     if((selectedPiece.getName() == Piece.Type.P && selectedPiece.getY() == 7) || (selectedPiece.getName() == Piece.Type.P && selectedPiece.getY() == 0)){
                                         Pz = selectedPiece;
@@ -519,7 +558,7 @@ public class Chess {
                                         }
                                     }
                                     if(Jiang){
-                                        AudioPlayer.playSound("src/main/resources/0705.将军.wav");
+                                        AudioPlayer.playSound("C:/MineChessS/src/main/resources/0705.将军.wav");
                                         JOptionPane.showMessageDialog(GameStage.instance(), "Jiang Jun La!");
                                         Jiang = false;
                                     }
