@@ -37,12 +37,11 @@ public class Chess {
     public static Piece selectedPiece = null;
     public static Piece Pz = null;
     public static ArrayList<Point2D> canMovePositions = new ArrayList<>();
+    public static ArrayList<Point2D> warnPositions = new ArrayList<>();
 
     public static Piece.Type LastEatenType;
     public static Piece LastEatenPiece;
     public static boolean Jiang;
-
-    public Chess() throws IOException {}
 
     private static void initialize(){
         View.setName("\n");
@@ -190,7 +189,7 @@ public class Chess {
                 result = null;
                 break;
         }
-        if(result.size()!=0) result.removeIf(p -> p.x < 0 || p.x >= 8 || p.y < 0 || p.y >= 8);
+        if(result !=null && result.size()!=0) result.removeIf(p -> p.x < 0 || p.x >= 8 || p.y < 0 || p.y >= 8);
         return result;
     }
 
@@ -227,7 +226,7 @@ public class Chess {
                 result = null;
                 break;
         }
-        if(result.size()!=0) result.removeIf(p -> p.x < 0 || p.x >= 8 || p.y < 0 || p.y >= 8);
+        if(result !=null && result.size()!=0) result.removeIf(p -> p.x < 0 || p.x >= 8 || p.y < 0 || p.y >= 8);
         return result;
     }
 
@@ -464,8 +463,10 @@ public class Chess {
                     selectedY = selectedPiece.getY();
                 }
 
-                int copyLastX = selectedX;
-                int copyLastY = selectedY;
+                warnPositions = null;
+
+                int spaceX = selectedX;
+                int spaceY = selectedY;
 
                 return new Action(true) {
 
@@ -483,11 +484,14 @@ public class Chess {
                                     return ActionPerformType.FAIL;
                                 }else{
                                     AudioPlayer.playSound("C:/MineChessS/src/main/resources/8位视频游戏声音 _ 硬币1 - Freesound.wav");
-                                    canMovePositions = piece.canMoveTo();
+
                                     selectedPiece = piece;
                                     isSelecting = true;
+                                    canMovePositions = piece.canMoveTo();
 
                                     if(Piece.checkPieceType(piece.getX(),piece.getY()) == Piece.Type.K){
+//                                        warnPositions.addAll(canMove(ChessColor.values()[Game.getNextPlayerIndex()]));
+//                                        warnPositions.addAll(canMoveP(ChessColor.values()[Game.getNextPlayerIndex()]));
                                         canMovePositions.removeIf(p -> canMove(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p) || canMoveP(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p));
 //                                        canMovePositions.addAll(p -> cantMoveP(ChessColor.values()[Game.getNextPlayerIndex()]).contains(p));
                                     }
@@ -495,8 +499,6 @@ public class Chess {
                                     return ActionPerformType.PENDING;
                                 }
                             }
-
-
                         } else {
                             isSelecting = false;
                             for (Point2D point : canMovePositions) {
@@ -505,6 +507,7 @@ public class Chess {
                                     if (this.removedPiece != null) {
                                         LastEatenType = this.removedPiece.getName();
                                     }
+
                                     AudioPlayer.playSound("C:/MineChessS/src/main/resources/pman - Freesound.wav");
 
                                     //bottom change
@@ -515,7 +518,7 @@ public class Chess {
                                         b.setVisible(true);
                                         n.setVisible(true);
                                         q.addActionListener((e) -> {
-                                            fourCases.forP(Pz,0);
+                                            FourCases.forP(Pz,0);
                                             q.setVisible(false);
                                             r.setVisible(false);
                                             b.setVisible(false);
@@ -523,7 +526,7 @@ public class Chess {
                                             EventCenter.publish(new BoardChangeEvent(e));
                                         });
                                         r.addActionListener((e) -> {
-                                            fourCases.forP(Pz,1);
+                                            FourCases.forP(Pz,1);
                                             q.setVisible(false);
                                             r.setVisible(false);
                                             b.setVisible(false);
@@ -531,7 +534,7 @@ public class Chess {
                                             EventCenter.publish(new BoardChangeEvent(e));
                                         });
                                         b.addActionListener((e) -> {
-                                            fourCases.forP(Pz,2);
+                                            FourCases.forP(Pz,2);
                                             q.setVisible(false);
                                             r.setVisible(false);
                                             b.setVisible(false);
@@ -539,7 +542,7 @@ public class Chess {
                                             EventCenter.publish(new BoardChangeEvent(e));
                                         });
                                         n.addActionListener((e) -> {
-                                            fourCases.forP(Pz,3);
+                                            FourCases.forP(Pz,3);
                                             q.setVisible(false);
                                             r.setVisible(false);
                                             b.setVisible(false);
@@ -569,6 +572,7 @@ public class Chess {
 
                             selectedPiece = null;
                             canMovePositions.clear();
+                            warnPositions.clear();
                             EventCenter.publish(new BoardChangeEvent(this));
                             return ActionPerformType.FAIL;
                         }
@@ -576,7 +580,7 @@ public class Chess {
 
                     @Override
                     public void undo() {
-                        Game.getBoard().movePiece(x, y, copyLastX, copyLastY);
+                        Game.getBoard().movePiece(x, y, spaceX, spaceY);
                         if (removedPiece != null) {
                             Game.getBoard().getGrid(x, y).setOwnedPiece(removedPiece);
                         }
@@ -586,6 +590,7 @@ public class Chess {
                     public void removePending() {
                         selectedPiece = null;
                         canMovePositions.clear();
+                        warnPositions.clear();
                     }
 
                 };
@@ -652,10 +657,10 @@ public class Chess {
             //redraw pieces
             @Override
             public void redraw(BaseGrid grid) {
-                boolean flag = true;
+                boolean key = true;
                 for (Point2D point : canMovePositions) {
                     if (point.x == grid.x && point.y == grid.y) {
-                        flag = false;
+                        key = false;
                         isHighLighted = true;
                         setBackground(new Color(102, 192, 175));
                         setOpaque(true);
@@ -663,7 +668,8 @@ public class Chess {
                     }
                 }
 
-                if (flag) {
+
+                if (key) {
                     isHighLighted = false;
                     if (!hasMouseEntered) {
                         setOpaque(false);
