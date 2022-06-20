@@ -142,51 +142,51 @@ public class Settings extends BaseStage {
                         ImageIcon x;
                         switch (m) {
                             case "BBLACK" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/BBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/BBLACK.png");
                                 location = x.getDescription();
                             }
                             case "BWHITE" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/BWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/BWHITE.png");
                                 location = x.getDescription();
                             }
                             case "KBLACK" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/KBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/KBLACK.png");
                                 location = x.getDescription();
                             }
                             case "KWHITE" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/KWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/KWHITE.png");
                                 location = x.getDescription();
                             }
                             case "NBLACK" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/NBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/NBLACK.png");
                                 location = x.getDescription();
                             }
                             case "NWHITE" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/NWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/NWHITE.png");
                                 location = x.getDescription();
                             }
                             case "PBLACK" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/PBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/PBLACK.png");
                                 location = x.getDescription();
                             }
                             case "PWHITE" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/PWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/PWHITE.png");
                                 location = x.getDescription();
                             }
                             case "QBLACK" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/QBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/QBLACK.png");
                                 location = x.getDescription();
                             }
                             case "QWHITE" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/QWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/QWHITE.png");
                                 location = x.getDescription();
                             }
                             case "RBLACK" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/RBLACK.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/RBLACK.png");
                                 location = x.getDescription();
                             }
                             case "RWHITE" -> {
-                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces3/RWHITE.png");
+                                x = new ImageIcon("C:/MineChessS/src/main/resources/pieces2/RWHITE.png");
                                 location = x.getDescription();
                             }
                             default -> {
